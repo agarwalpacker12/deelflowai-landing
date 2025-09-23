@@ -11,15 +11,16 @@ function Navbar() {
           style={{ height: "4rem" }}
         >
           {/* Logo */}
-          <div className="logo">
-            <Image
-              src="/assets/logo.jpeg"
-              alt="WholesaleAI Logo"
-              width="160"
-              height="40"
-            />
-          </div>
-
+          <Link href={"/"}>
+            <div className="logo">
+              <Image
+                src="/assets/logo.jpeg"
+                alt="WholesaleAI Logo"
+                width="160"
+                height="40"
+              />
+            </div>
+          </Link>
           {/* Desktop Navigation */}
           <nav className="desktop-navigation">
             <ul

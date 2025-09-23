@@ -2,7 +2,7 @@ import React from "react";
 
 function SocialProof() {
   return (
-    <section className="social-proof">
+    <section className="social-proof" id="about">
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="section-title">

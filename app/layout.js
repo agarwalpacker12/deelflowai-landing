@@ -1,5 +1,5 @@
 import "./globals.css";
-import Navbar from "./propertyList/component/hero/Navbar";
+import Navbar from "./component/hero/Navbar";
 import "./style.css";
 
 export const metadata = {

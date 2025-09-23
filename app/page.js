@@ -2,13 +2,13 @@
 import Image from "next/image";
 import DealflowScript from "./DealflowScript";
 import Link from "next/link";
-import Banner from "./propertyList/component/hero/Banner";
-import SocialProof from "./propertyList/component/hero/SocialProof";
-import LossSection from "./propertyList/component/hero/LossSection";
-import Feature from "./propertyList/component/hero/Feature";
-import BlockChain from "./propertyList/component/hero/BlockChain";
-import Pricing from "./propertyList/component/hero/Pricing";
-import Testimonial from "./propertyList/component/hero/Testimonial";
+import Banner from "./component/hero/Banner";
+import SocialProof from "./component/hero/SocialProof";
+import LossSection from "./component/hero/LossSection";
+import Feature from "./component/hero/Feature";
+import BlockChain from "./component/hero/BlockChain";
+import Pricing from "./component/hero/Pricing";
+import Testimonial from "./component/hero/Testimonial";
 
 export default function Home() {
   // Close live feed function

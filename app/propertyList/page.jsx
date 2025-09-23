@@ -1,1060 +1,436 @@
-// "use client";
-
-// import React, { useState } from "react";
-// import {
-//   Search,
-//   Heart,
-//   Share2,
-//   Camera,
-//   MapPin,
-//   Bed,
-//   Bath,
-//   Square,
-//   Filter,
-//   Grid3X3,
-//   Map,
-//   ChevronDown,
-//   Star,
-//   Menu,
-//   User,
-//   Phone,
-//   Mail,
-//   Home,
-//   Building,
-//   Calendar,
-//   DollarSign,
-// } from "lucide-react";
-// import styles from "./propertyList.module.css";
-
-// const ZillowPage = () => {
-//   const [viewMode, setViewMode] = useState("split"); // split, list, map
-//   const [selectedFilters, setSelectedFilters] = useState({
-//     price: "",
-//     bedrooms: "",
-//     bathrooms: "",
-//     homeType: "",
-//     moreFilters: false,
-//   });
-//   const [savedHomes, setSavedHomes] = useState(new Set());
-
-//   // Sample property data based on the image
-//   const properties = [
-//     {
-//       id: 1,
-//       price: "$675,000",
-//       beds: 4,
-//       baths: 3,
-//       sqft: "2,100",
-//       address: "188 Canterbury Pl, Royal Palm Beach, FL 33414",
-//       images: ["/api/placeholder/300/200"],
-//       daysOnZillow: 4,
-//       agent: "BERKSHIRE HATHAWAY FLORIDA REALTY",
-//       priceHistory: [
-//         { date: "2024-01-15", price: "$675,000", event: "Listed" },
-//       ],
-//     },
-//     {
-//       id: 2,
-//       price: "$420,000",
-//       beds: 3,
-//       baths: 2,
-//       sqft: "1,812",
-//       address: "122 Newberry Ln, Royal Palm Beach, FL 33414",
-//       images: ["/api/placeholder/300/200"],
-//       daysOnZillow: 28,
-//       agent: "EXIT REALTY MIZNER",
-//       priceHistory: [
-//         { date: "2024-01-01", price: "$420,000", event: "Listed" },
-//       ],
-//     },
-//     {
-//       id: 3,
-//       price: "$410,000",
-//       beds: 3,
-//       baths: 2,
-//       sqft: "1,812",
-//       address: "381 River Bluff Ln, Royal Palm Beach, FL 33411",
-//       images: ["/api/placeholder/300/200"],
-//       daysOnZillow: 21,
-//       agent: "AFFINITY REALTY SERVICES LLC",
-//       priceHistory: [
-//         { date: "2024-01-08", price: "$410,000", event: "Listed" },
-//       ],
-//     },
-//     {
-//       id: 4,
-//       price: "$330,000",
-//       beds: 2,
-//       baths: 3,
-//       sqft: "1,448",
-//       address: "10710 Old Hammock Way, Wellington, FL 33414",
-//       images: ["/api/placeholder/300/200"],
-//       daysOnZillow: 7,
-//       agent: "PRIME HOME REALTY GROUP INC",
-//       type: "Townhouse",
-//       priceHistory: [
-//         { date: "2024-01-20", price: "$330,000", event: "Listed" },
-//       ],
-//     },
-//     {
-//       id: 5,
-//       price: "$825,000",
-//       beds: 5,
-//       baths: 3,
-//       sqft: "3,167",
-//       address: "15234 Oatland Dr, Wellington, FL 33414",
-//       images: ["/api/placeholder/300/200"],
-//       daysOnZillow: 15,
-//       agent: "PARTNERSHIP REALTY INC",
-//       priceHistory: [
-//         { date: "2024-01-12", price: "$825,000", event: "Listed" },
-//       ],
-//     },
-//     {
-//       id: 6,
-//       price: "$599,000",
-//       beds: 3,
-//       baths: 2,
-//       sqft: "2,156",
-//       address: "12845 Hyland Cir, Boca Raton, FL 33428",
-//       images: ["/api/placeholder/300/200"],
-//       daysOnZillow: 12,
-//       agent: "COLDWELL BANKER REALTY",
-//       priceHistory: [
-//         { date: "2024-01-15", price: "$599,000", event: "Listed" },
-//       ],
-//     },
-//   ];
-
-//   const toggleSaved = (propertyId) => {
-//     const newSaved = new Set(savedHomes);
-//     if (newSaved.has(propertyId)) {
-//       newSaved.delete(propertyId);
-//     } else {
-//       newSaved.add(propertyId);
-//     }
-//     setSavedHomes(newSaved);
-//   };
-
-//   const PropertyCard = ({ property }) => (
-//     <div className={styles.propertyCard}>
-//       <div className={styles.propertyImageContainer}>
-//         <img
-//           src="/api/placeholder/280/200"
-//           //   alt={property.address}
-//           className={styles.propertyImage}
-//         />
-//         <button
-//           onClick={() => toggleSaved(property.id)}
-//           className={styles.saveButton}
-//         >
-//           <Heart
-//             className={`${styles.heartIcon} ${
-//               savedHomes.has(property.id) ? styles.heartSaved : ""
-//             }`}
-//           />
-//         </button>
-//         <div className={styles.daysOnZillow}>
-//           {property.daysOnZillow} days on Zillow
-//         </div>
-//       </div>
-//       <div className={styles.propertyInfo}>
-//         <div className={styles.propertyHeader}>
-//           <h3 className={styles.propertyPrice}>{property.price}</h3>
-//           <button className={styles.shareButton}>
-//             <Share2 className={styles.shareIcon} />
-//           </button>
-//         </div>
-//         <div className={styles.propertyDetails}>
-//           <span className={styles.propertyDetail}>
-//             <Bed className={styles.detailIcon} />
-//             {property.beds} bd
-//           </span>
-//           <span className={styles.propertyDetail}>
-//             <Bath className={styles.detailIcon} />
-//             {property.baths} ba
-//           </span>
-//           <span className={styles.propertyDetail}>
-//             <Square className={styles.detailIcon} />
-//             {property.sqft} sqft
-//           </span>
-//         </div>
-//         <p className={styles.propertyAddress}>{property.address}</p>
-//         <p className={styles.propertyAgent}>{property.agent}</p>
-//         {property.type && (
-//           <div className={styles.propertyTypeContainer}>
-//             <span className={styles.propertyType}>{property.type}</span>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-
-//   return (
-//     <div className={styles.container}>
-//       {/* Header */}
-//       <header className={styles.header}>
-//         <div className={styles.headerContent}>
-//           <div className={styles.headerLeft}>
-//             {/* Logo */}
-//             <div className={styles.logo}>Zillow</div>
-//           </div>
-
-//           {/* Navigation */}
-//           <nav className={styles.navigation}>
-//             <a href="#" className={styles.navLink}>
-//               Buy
-//             </a>
-//             <a href="#" className={styles.navLink}>
-//               Rent
-//             </a>
-//             <a href="#" className={styles.navLink}>
-//               Sell
-//             </a>
-//             <a href="#" className={styles.navLink}>
-//               Home Loans
-//             </a>
-//             <a href="#" className={styles.navLink}>
-//               Agent finder
-//             </a>
-//           </nav>
-
-//           {/* Right side */}
-//           <div className={styles.headerRight}>
-//             <button className={styles.headerButton}>Manage Rentals</button>
-//             <button className={styles.headerButton}>Advertise</button>
-//             <button className={styles.headerButton}>Help</button>
-//             <button className={styles.headerButton}>Sign in</button>
-//           </div>
-//         </div>
-//       </header>
-
-//       {/* Search Bar */}
-//       <div className={styles.searchSection}>
-//         <div className={styles.searchContainer}>
-//           <div className={styles.searchInputContainer}>
-//             <Search className={styles.searchIcon} />
-//             <input
-//               type="text"
-//               placeholder="Royal Palm Beach FL"
-//               className={styles.searchInput}
-//               defaultValue="Royal Palm Beach FL"
-//             />
-//           </div>
-//           <button className={styles.searchButton}>Search</button>
-//         </div>
-//       </div>
-
-//       {/* Filters */}
-//       <div className={styles.filtersSection}>
-//         <div className={styles.filtersContainer}>
-//           <div className={styles.filtersLeft}>
-//             <select className={styles.filterSelect}>
-//               <option>For sale</option>
-//               <option>For rent</option>
-//             </select>
-
-//             <select className={styles.filterSelect}>
-//               <option>Price</option>
-//               <option>$0 - $200k</option>
-//               <option>$200k - $400k</option>
-//               <option>$400k - $600k</option>
-//               <option>$600k+</option>
-//             </select>
-
-//             <select className={styles.filterSelect}>
-//               <option>Beds & Baths</option>
-//               <option>1+ beds</option>
-//               <option>2+ beds</option>
-//               <option>3+ beds</option>
-//               <option>4+ beds</option>
-//             </select>
-
-//             <select className={styles.filterSelect}>
-//               <option>Home Type</option>
-//               <option>Houses</option>
-//               <option>Townhomes</option>
-//               <option>Condos</option>
-//               <option>Apartments</option>
-//             </select>
-
-//             <button className={styles.moreFiltersButton}>
-//               <Filter className={styles.filterIcon} />
-//               <span>More</span>
-//             </button>
-//           </div>
-
-//           <div className={styles.filtersRight}>
-//             <span className={styles.resultsCount}>240 results</span>
-//             <select className={styles.sortSelect}>
-//               <option>Homes for You</option>
-//               <option>Price (High to Low)</option>
-//               <option>Price (Low to High)</option>
-//               <option>Newest</option>
-//             </select>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* View Toggle */}
-//       <div className={styles.viewToggleSection}>
-//         <div className={styles.viewToggleContainer}>
-//           <div className={styles.viewToggle}>
-//             <button
-//               onClick={() => setViewMode("split")}
-//               className={`${styles.viewButton} ${
-//                 viewMode === "split" ? styles.viewButtonActive : ""
-//               }`}
-//             >
-//               <Grid3X3 className={styles.viewIcon} />
-//               <span>Split</span>
-//             </button>
-//             <button
-//               onClick={() => setViewMode("list")}
-//               className={`${styles.viewButton} ${
-//                 viewMode === "list" ? styles.viewButtonActive : ""
-//               }`}
-//             >
-//               <span>List</span>
-//             </button>
-//             <button
-//               onClick={() => setViewMode("map")}
-//               className={`${styles.viewButton} ${
-//                 viewMode === "map" ? styles.viewButtonActive : ""
-//               }`}
-//             >
-//               <MapPin className={styles.viewIcon} />
-//               <span>Map</span>
-//             </button>
-//           </div>
-
-//           <button className={styles.saveSearchButton}>Save Search</button>
-//         </div>
-//       </div>
-
-//       {/* Main Content */}
-//       <div className={styles.mainContent}>
-//         <div className={styles.contentWrapper}>
-//           {/* Map Section */}
-//           {(viewMode === "split" || viewMode === "map") && (
-//             <div
-//               className={`${styles.mapSection} ${
-//                 viewMode === "split" ? styles.mapSplit : styles.mapFull
-//               }`}
-//             >
-//               <div className={styles.mapContainer}>
-//                 {/* Mock Map */}
-//                 <div className={styles.mapBackground}></div>
-
-//                 {/* Map Controls */}
-//                 <div className={styles.mapControlsLeft}>
-//                   <button className={styles.mapControl}>
-//                     <span>Draw</span>
-//                   </button>
-//                   <button className={styles.mapControl}>
-//                     <span>Schools</span>
-//                   </button>
-//                 </div>
-
-//                 <div className={styles.mapControlsRight}>
-//                   <button className={styles.mapControl}>
-//                     <span>Layers</span>
-//                   </button>
-//                 </div>
-
-//                 <div className={styles.mapControlsBottom}>
-//                   <button className={styles.mapControl}>
-//                     <span>+</span>
-//                   </button>
-//                   <button className={styles.mapControl}>
-//                     <span>-</span>
-//                   </button>
-//                 </div>
-
-//                 {/* Sample Property Pins */}
-//                 <div
-//                   className={styles.propertyPin}
-//                   style={{ top: "25%", left: "25%" }}
-//                 >
-//                   $675K
-//                 </div>
-//                 <div
-//                   className={styles.propertyPin}
-//                   style={{ top: "33%", left: "33%" }}
-//                 >
-//                   $420K
-//                 </div>
-//                 <div
-//                   className={styles.propertyPin}
-//                   style={{ top: "40%", left: "40%" }}
-//                 >
-//                   $410K
-//                 </div>
-//                 <div
-//                   className={styles.propertyPin}
-//                   style={{ top: "50%", left: "50%" }}
-//                 >
-//                   $330K
-//                 </div>
-//                 <div
-//                   className={styles.propertyPin}
-//                   style={{ top: "60%", left: "60%" }}
-//                 >
-//                   $825K
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-
-//           {/* Listings Section */}
-//           {(viewMode === "split" || viewMode === "list") && (
-//             <div
-//               className={`${styles.listingsSection} ${
-//                 viewMode === "split"
-//                   ? styles.listingsSplit
-//                   : styles.listingsFull
-//               }`}
-//             >
-//               <div className={styles.listingsContainer}>
-//                 {/* Results Header */}
-//                 <div className={styles.resultsHeader}>
-//                   <h1 className={styles.resultsTitle}>
-//                     Royal Palm Beach FL Real Estate & Homes for Sale
-//                   </h1>
-//                   <p className={styles.resultsSubtitle}>
-//                     240 homes for sale in Royal Palm Beach, FL
-//                   </p>
-//                 </div>
-
-//                 {/* Property Grid */}
-//                 <div className={styles.propertyGrid}>
-//                   {properties.map((property) => (
-//                     <PropertyCard key={property.id} property={property} />
-//                   ))}
-//                 </div>
-
-//                 {/* Load More */}
-//                 <div className={styles.loadMoreContainer}>
-//                   <button className={styles.loadMoreButton}>
-//                     Show more results
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-
-//       {/* Footer Content */}
-//       <div className={styles.footer}>
-//         <div className={styles.footerContent}>
-//           <div className={styles.footerGrid}>
-//             <div className={styles.footerColumn}>
-//               <h3 className={styles.footerHeading}>Buy</h3>
-//               <ul className={styles.footerLinks}>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Homes for sale
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Open houses
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     New homes
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Recently sold
-//                   </a>
-//                 </li>
-//               </ul>
-//             </div>
-//             <div className={styles.footerColumn}>
-//               <h3 className={styles.footerHeading}>Rent</h3>
-//               <ul className={styles.footerLinks}>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Rental listings
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Rental manager
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Rental buildings
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Rental application
-//                   </a>
-//                 </li>
-//               </ul>
-//             </div>
-//             <div className={styles.footerColumn}>
-//               <h3 className={styles.footerHeading}>Sell</h3>
-//               <ul className={styles.footerLinks}>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Sell your home
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Home values
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Sellers guide
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Foreclosures
-//                   </a>
-//                 </li>
-//               </ul>
-//             </div>
-//             <div className={styles.footerColumn}>
-//               <h3 className={styles.footerHeading}>Finance</h3>
-//               <ul className={styles.footerLinks}>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Mortgage rates
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Mortgage lenders
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Mortgage calculator
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a href="#" className={styles.footerLink}>
-//                     Affordability calculator
-//                   </a>
-//                 </li>
-//               </ul>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ZillowPage;
-
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
+import styles from "./page.module.css";
 import {
   Search,
-  Heart,
-  Share2,
-  Camera,
-  MapPin,
   Bed,
   Bath,
   Square,
+  Heart,
   Filter,
-  Grid3X3,
-  Map,
-  ChevronDown,
-  Star,
-  Menu,
-  User,
-  Phone,
-  Mail,
-  Home,
   Building,
-  Calendar,
-  DollarSign,
+  Play,
+  Grid,
+  Map,
+  User,
+  Bell,
+  Zap,
 } from "lucide-react";
-import styles from "./propertyList.module.css";
 
-const ZillowPage = () => {
-  const [viewMode, setViewMode] = useState("split"); // split, list, map
-  const [selectedFilters, setSelectedFilters] = useState({
-    price: "",
-    bedrooms: "",
-    bathrooms: "",
-    homeType: "",
-    moreFilters: false,
-  });
-  const [savedHomes, setSavedHomes] = useState(new Set());
+// Filter Reducer
+const filterReducer = (state, action) => {
+  switch (action.type) {
+    case "SET_PROPERTY_TYPE":
+      return { ...state, propertyType: action.payload };
+    case "SET_PRICE_RANGE":
+      return {
+        ...state,
+        priceMin: action.payload.min,
+        priceMax: action.payload.max,
+      };
+    case "SET_BEDS":
+      return { ...state, beds: action.payload };
+    case "SET_BATHS":
+      return { ...state, baths: action.payload };
+    case "RESET_FILTERS":
+      return {
+        propertyType: "all",
+        priceMin: "",
+        priceMax: "",
+        beds: "any",
+        baths: "any",
+        sqftMin: "",
+        sqftMax: "",
+        yearBuilt: "",
+        amenities: [],
+      };
+    default:
+      return state;
+  }
+};
 
-  // Sample property data based on the image
-  const properties = [
-    {
-      id: 1,
-      price: "$675,000",
-      beds: 4,
-      baths: 3,
-      sqft: "2,100",
-      address: "188 Canterbury Pl, Royal Palm Beach, FL 33414",
-      images: ["/api/placeholder/300/200"],
-      daysOnZillow: 4,
-      agent: "BERKSHIRE HATHAWAY FLORIDA REALTY",
-      priceHistory: [
-        { date: "2024-01-15", price: "$675,000", event: "Listed" },
-      ],
-    },
-    {
-      id: 2,
-      price: "$420,000",
-      beds: 3,
-      baths: 2,
-      sqft: "1,812",
-      address: "122 Newberry Ln, Royal Palm Beach, FL 33414",
-      images: ["/api/placeholder/300/200"],
-      daysOnZillow: 28,
-      agent: "EXIT REALTY MIZNER",
-      priceHistory: [
-        { date: "2024-01-01", price: "$420,000", event: "Listed" },
-      ],
-    },
-    {
-      id: 3,
-      price: "$410,000",
-      beds: 3,
-      baths: 2,
-      sqft: "1,812",
-      address: "381 River Bluff Ln, Royal Palm Beach, FL 33411",
-      images: ["/api/placeholder/300/200"],
-      daysOnZillow: 21,
-      agent: "AFFINITY REALTY SERVICES LLC",
-      priceHistory: [
-        { date: "2024-01-08", price: "$410,000", event: "Listed" },
-      ],
-    },
-    {
-      id: 4,
-      price: "$330,000",
-      beds: 2,
-      baths: 3,
-      sqft: "1,448",
-      address: "10710 Old Hammock Way, Wellington, FL 33414",
-      images: ["/api/placeholder/300/200"],
-      daysOnZillow: 7,
-      agent: "PRIME HOME REALTY GROUP INC",
-      type: "Townhouse",
-      priceHistory: [
-        { date: "2024-01-20", price: "$330,000", event: "Listed" },
-      ],
-    },
-    {
-      id: 5,
-      price: "$825,000",
-      beds: 5,
-      baths: 3,
-      sqft: "3,167",
-      address: "15234 Oatland Dr, Wellington, FL 33414",
-      images: ["/api/placeholder/300/200"],
-      daysOnZillow: 15,
-      agent: "PARTNERSHIP REALTY INC",
-      priceHistory: [
-        { date: "2024-01-12", price: "$825,000", event: "Listed" },
-      ],
-    },
-    {
-      id: 6,
-      price: "$599,000",
-      beds: 3,
-      baths: 2,
-      sqft: "2,156",
-      address: "12845 Hyland Cir, Boca Raton, FL 33428",
-      images: ["/api/placeholder/300/200"],
-      daysOnZillow: 12,
-      agent: "COLDWELL BANKER REALTY",
-      priceHistory: [
-        { date: "2024-01-15", price: "$599,000", event: "Listed" },
-      ],
-    },
-  ];
+// Components
 
-  const toggleSaved = (propertyId) => {
-    const newSaved = new Set(savedHomes);
-    if (newSaved.has(propertyId)) {
-      newSaved.delete(propertyId);
-    } else {
-      newSaved.add(propertyId);
-    }
-    setSavedHomes(newSaved);
-  };
-
-  const PropertyCard = ({ property }) => (
-    <div className={styles.propertyCard}>
-      <div className={styles.propertyImageContainer}>
-        <img
-          src="/api/placeholder/280/200"
-          //   alt={property.address}
-          className={styles.propertyImage}
-        />
-        <button
-          onClick={() => toggleSaved(property.id)}
-          className={styles.saveButton}
-        >
-          <Heart
-            className={`${styles.heartIcon} ${
-              savedHomes.has(property.id) ? styles.heartSaved : ""
-            }`}
-          />
-        </button>
-        <div className={styles.daysOnZillow}>
-          {property.daysOnZillow} days on Zillow
-        </div>
-      </div>
-      <div className={styles.propertyInfo}>
-        <div className={styles.propertyHeader}>
-          <h3 className={styles.propertyPrice}>{property.price}</h3>
-          <button className={styles.shareButton}>
-            <Share2 className={styles.shareIcon} />
-          </button>
-        </div>
-        <div className={styles.propertyDetails}>
-          <span className={styles.propertyDetail}>
-            <Bed className={styles.detailIcon} />
-            {property.beds} bd
-          </span>
-          <span className={styles.propertyDetail}>
-            <Bath className={styles.detailIcon} />
-            {property.baths} ba
-          </span>
-          <span className={styles.propertyDetail}>
-            <Square className={styles.detailIcon} />
-            {property.sqft} sqft
-          </span>
-        </div>
-        <p className={styles.propertyAddress}>{property.address}</p>
-        <p className={styles.propertyAgent}>{property.agent}</p>
-        {property.type && (
-          <div className={styles.propertyTypeContainer}>
-            <span className={styles.propertyType}>{property.type}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  // Google Map Component
-  const GoogleMap = () => (
-    <div className={styles.googleMapContainer}>
-      <div className={styles.mapCanvas}>
-        {/* Map Roads */}
-        <div className={styles.mapRoads}>
-          <div className={`${styles.road} ${styles.roadHorizontal}`}></div>
-          <div className={`${styles.road} ${styles.roadVertical}`}></div>
-          <div className={`${styles.road} ${styles.roadDiagonal}`}></div>
-        </div>
-
-        {/* Map Water Features */}
-        <div className={`${styles.mapWater} ${styles.water1}`}></div>
-        <div className={`${styles.mapWater} ${styles.water2}`}></div>
-
-        {/* Map Parks */}
-        <div className={`${styles.mapPark} ${styles.park1}`}></div>
-        <div className={`${styles.mapPark} ${styles.park2}`}></div>
-
-        {/* Map Labels */}
-        <div className={styles.mapLabels}>
-          <div className={styles.mapLabel} style={{ top: "25%", left: "45%" }}>
-            Royal Palm Beach
-          </div>
-          <div
-            className={`${styles.mapLabel} ${styles.streetLabel}`}
-            style={{ top: "28%", left: "10%" }}
-          >
-            Royal Palm Beach Blvd
-          </div>
-          <div
-            className={`${styles.mapLabel} ${styles.streetLabel}`}
-            style={{ top: "58%", left: "25%" }}
-          >
-            Okeechobee Blvd
-          </div>
-          <div
-            className={`${styles.mapLabel} ${styles.streetLabel}`}
-            style={{ top: "15%", left: "42%", transform: "rotate(90deg)" }}
-          >
-            441
-          </div>
-          <div
-            className={styles.mapLabel}
-            style={{ bottom: "30%", left: "15%" }}
-          >
-            Wellington
-          </div>
-          <div className={styles.mapLabel} style={{ top: "15%", right: "20%" }}>
-            West Palm Beach
-          </div>
-        </div>
-
-        {/* Sample Property Pins with enhanced styling */}
-        <div
-          className={styles.propertyPin}
-          style={{
-            top: "25%",
-            left: "25%",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-          }}
-          title="4 bed, 3 bath - $675,000"
-        >
-          $675K
-        </div>
-        <div
-          className={styles.propertyPin}
-          style={{
-            top: "33%",
-            left: "33%",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-          }}
-          title="3 bed, 2 bath - $420,000"
-        >
-          $420K
-        </div>
-        <div
-          className={styles.propertyPin}
-          style={{
-            top: "40%",
-            left: "40%",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-          }}
-          title="3 bed, 2 bath - $410,000"
-        >
-          $410K
-        </div>
-        <div
-          className={styles.propertyPin}
-          style={{
-            top: "50%",
-            left: "50%",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-          }}
-          title="2 bed, 3 bath Townhouse - $330,000"
-        >
-          $330K
-        </div>
-        <div
-          className={styles.propertyPin}
-          style={{
-            top: "60%",
-            left: "60%",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-          }}
-          title="5 bed, 3 bath - $825,000"
-        >
-          $825K
-        </div>
-
-        {/* Google Map Attribution */}
-        <div className={styles.mapAttribution}>Map data ©2024 Google</div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className={styles.container}>
-      {/* Header */}
-
-      {/* Search Bar */}
-      <div className={styles.searchSection}>
-        <div className={styles.searchContainer}>
-          <div className={styles.searchInputContainer}>
+const SearchBar = ({ searchQuery, setSearchQuery, styles }) => (
+  <div className={styles.searchSection}>
+    <div className={styles.searchContainer}>
+      <h1 className={styles.searchTitle}>Find Your Dream Home</h1>
+      <div className={styles.searchBox}>
+        <div className={styles.searchInputGroup}>
+          <div className={styles.searchInputWrapper}>
             <Search className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Royal Palm Beach FL"
+              placeholder="Enter address, city, or ZIP"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.searchInput}
-              defaultValue="Royal Palm Beach FL"
+              aria-label="Search location"
             />
           </div>
-          <button className={styles.searchButton}>Search</button>
+          <select className={styles.searchSelect} aria-label="Property status">
+            <option>For Sale</option>
+            <option>For Rent</option>
+            <option>Sold</option>
+          </select>
+          <button
+            className={styles.searchButton}
+            aria-label="Search properties"
+          >
+            Search
+          </button>
         </div>
       </div>
+    </div>
+  </div>
+);
 
-      {/* Filters */}
-      <div className={styles.filtersSection}>
-        <div className={styles.filtersContainer}>
-          <div className={styles.filtersLeft}>
-            <select className={styles.filterSelect}>
-              <option>For sale</option>
-              <option>For rent</option>
-            </select>
+const PropertyCard = ({ property, styles, setSelectedProperty }) => {
+  const [saved, setSaved] = useState(false);
 
-            <select className={styles.filterSelect}>
-              <option>Price</option>
-              <option>$0 - $200k</option>
-              <option>$200k - $400k</option>
-              <option>$400k - $600k</option>
-              <option>$600k+</option>
-            </select>
+  return (
+    <div className={styles.propertyCard}>
+      <div className={styles.propertyImageContainer}>
+        <img
+          src={`https://via.placeholder.com/800x600?text=${encodeURIComponent(
+            property.address
+          )}`}
+          alt={`Property at ${property.address}`}
+          className={styles.propertyImage}
+        />
 
-            <select className={styles.filterSelect}>
-              <option>Beds & Baths</option>
-              <option>1+ beds</option>
-              <option>2+ beds</option>
-              <option>3+ beds</option>
-              <option>4+ beds</option>
-            </select>
+        <div className={styles.statusBadge}>{property.status}</div>
 
-            <select className={styles.filterSelect}>
-              <option>Home Type</option>
-              <option>Houses</option>
-              <option>Townhomes</option>
-              <option>Condos</option>
-              <option>Apartments</option>
-            </select>
-
-            <button className={styles.moreFiltersButton}>
-              <Filter className={styles.filterIcon} />
-              <span>More</span>
-            </button>
+        {property.virtualTour && (
+          <div className={styles.virtualTourBadge}>
+            <Play className={styles.virtualTourIcon} />
+            3D Tour
           </div>
+        )}
 
-          <div className={styles.filtersRight}>
-            <span className={styles.resultsCount}>240 results</span>
-            <select className={styles.sortSelect}>
-              <option>Homes for You</option>
-              <option>Price (High to Low)</option>
-              <option>Price (Low to High)</option>
-              <option>Newest</option>
-            </select>
-          </div>
-        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSaved(!saved);
+          }}
+          className={styles.saveButton}
+          aria-label={saved ? "Remove from saved" : "Save property"}
+        >
+          <Heart
+            className={`${styles.saveIcon} ${
+              saved ? styles.saveIconActive : ""
+            }`}
+          />
+        </button>
       </div>
 
-      {/* View Toggle */}
-      <div className={styles.viewToggleSection}>
-        <div className={styles.viewToggleContainer}>
-          <div className={styles.viewToggle}>
-            <button
-              onClick={() => setViewMode("split")}
-              className={`${styles.viewButton} ${
-                viewMode === "split" ? styles.viewButtonActive : ""
-              }`}
-            >
-              <Grid3X3 className={styles.viewIcon} />
-              <span>Split</span>
-            </button>
-            <button
-              onClick={() => setViewMode("list")}
-              className={`${styles.viewButton} ${
-                viewMode === "list" ? styles.viewButtonActive : ""
-              }`}
-            >
-              <span>List</span>
-            </button>
-            <button
-              onClick={() => setViewMode("map")}
-              className={`${styles.viewButton} ${
-                viewMode === "map" ? styles.viewButtonActive : ""
-              }`}
-            >
-              <MapPin className={styles.viewIcon} />
-              <span>Map</span>
-            </button>
+      <div className={styles.propertyDetails}>
+        <div className={styles.propertyHeader}>
+          <div className={styles.propertyPrice}>
+            ${property.price.toLocaleString()}
           </div>
-
-          <button className={styles.saveSearchButton}>Save Search</button>
+          <div className={styles.aiScore}>
+            <Zap className={styles.aiScoreIcon} />
+            <span>AI: {property.aiScore}</span>
+          </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className={styles.mainContent}>
-        <div className={styles.contentWrapper}>
-          {/* Map Section */}
-          {(viewMode === "split" || viewMode === "map") && (
-            <div
-              className={`${styles.mapSection} ${
-                viewMode === "split" ? styles.mapSplit : styles.mapFull
-              }`}
-            >
-              <div className={styles.mapContainer}>
-                {/* Google Map */}
-                <GoogleMap />
-
-                {/* Map Controls */}
-                <div className={styles.mapControlsLeft}>
-                  <button className={styles.mapControl}>
-                    <span>Draw</span>
-                  </button>
-                  <button className={styles.mapControl}>
-                    <span>Schools</span>
-                  </button>
-                </div>
-
-                <div className={styles.mapControlsRight}>
-                  <button className={styles.mapControl}>
-                    <span>Layers</span>
-                  </button>
-                </div>
-
-                <div className={styles.mapControlsBottom}>
-                  <button className={styles.mapControl}>
-                    <span>+</span>
-                  </button>
-                  <button className={styles.mapControl}>
-                    <span>-</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Listings Section */}
-          {(viewMode === "split" || viewMode === "list") && (
-            <div
-              className={`${styles.listingsSection} ${
-                viewMode === "split"
-                  ? styles.listingsSplit
-                  : styles.listingsFull
-              }`}
-            >
-              <div className={styles.listingsContainer}>
-                {/* Results Header */}
-                <div className={styles.resultsHeader}>
-                  <h1 className={styles.resultsTitle}>
-                    Royal Palm Beach FL Real Estate & Homes for Sale
-                  </h1>
-                  <p className={styles.resultsSubtitle}>
-                    240 homes for sale in Royal Palm Beach, FL
-                  </p>
-                </div>
-
-                {/* Property Grid */}
-                <div className={styles.propertyGrid}>
-                  {properties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
-                </div>
-
-                {/* Load More */}
-                <div className={styles.loadMoreContainer}>
-                  <button className={styles.loadMoreButton}>
-                    Show more results
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className={styles.propertyFeatures}>
+          <div className={styles.feature}>
+            <Bed className={styles.featureIcon} />
+            <span>{property.beds} bd</span>
+          </div>
+          <div className={styles.feature}>
+            <Bath className={styles.featureIcon} />
+            <span>{property.baths} ba</span>
+          </div>
+          <div className={styles.feature}>
+            <Square className={styles.featureIcon} />
+            <span>{property.sqft.toLocaleString()} sqft</span>
+          </div>
         </div>
+
+        <div className={styles.propertyAddress}>
+          <p className={styles.addressStreet}>{property.address}</p>
+          <p className={styles.addressCity}>
+            {property.city}, {property.state} {property.zip}
+          </p>
+        </div>
+
+        <div className={styles.marketInsights}>
+          <div className={styles.insightRow}>
+            <span>Est. Value:</span>
+            <span className={styles.insightValue}>
+              ${property.marketValue.toLocaleString()}
+            </span>
+          </div>
+          <div className={styles.insightRow}>
+            <span>Rent Est:</span>
+            <span className={styles.insightValue}>
+              ${property.rentEstimate}/mo
+            </span>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setSelectedProperty(property)}
+          className={styles.viewDetailsButton}
+        >
+          View Details
+        </button>
       </div>
     </div>
   );
 };
 
-export default ZillowPage;
+// Main Page Component
+export default function PropertiesPage() {
+  const [activeView, setActiveView] = useState("buy");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState("grid");
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  const [user] = useState({
+    name: "John Smith",
+    type: "buyer",
+    savedProperties: [],
+    notifications: 5,
+  });
+
+  const [filters, dispatch] = useReducer(filterReducer, {
+    propertyType: "all",
+    priceMin: "",
+    priceMax: "",
+    beds: "any",
+    baths: "any",
+    sqftMin: "",
+    sqftMax: "",
+    yearBuilt: "",
+    amenities: [],
+  });
+
+  // Sample properties data
+  const [properties] = useState([
+    {
+      id: "prop-001",
+      address: "123 Maple Street",
+      city: "Miami",
+      state: "FL",
+      zip: "33101",
+      price: "7,50,000",
+      type: "Single Family",
+      beds: 4,
+      baths: 3,
+      sqft: 2500,
+      yearBuilt: 2018,
+      description: "Beautiful modern home with ocean views",
+      aiScore: 92,
+      marketValue: "780000",
+      rentEstimate: "4500",
+      features: ["Pool", "Garage", "Smart Home", "Solar Panels"],
+      virtualTour: true,
+      agent: { name: "Sarah Johnson", rating: 4.9, phone: "555-0123" },
+      status: "For Sale",
+      daysOnMarket: 5,
+    },
+    {
+      id: "prop-002",
+      address: "456 Oak Avenue",
+      city: "Fort Lauderdale",
+      state: "FL",
+      zip: "33301",
+      price: "450000",
+      type: "Condo",
+      beds: 2,
+      baths: 2,
+      sqft: 1200,
+      yearBuilt: 2020,
+      description: "Luxury condo in downtown with city views",
+      aiScore: 88,
+      marketValue: "460000",
+      rentEstimate: "2800",
+      features: ["Gym", "Concierge", "Rooftop Pool"],
+      virtualTour: true,
+      agent: { name: "Mike Chen", rating: 4.7, phone: "555-0124" },
+      status: "For Sale",
+      daysOnMarket: 12,
+    },
+    {
+      id: "prop-003",
+      address: "789 Pine Road",
+      city: "Boca Raton",
+      state: "FL",
+      zip: "33432",
+      price: "1,200,000",
+      type: "Single Family",
+      beds: 5,
+      baths: 4,
+      sqft: 3800,
+      yearBuilt: 2022,
+      description: "Stunning luxury estate with private beach access",
+      aiScore: 95,
+      marketValue: "1250000",
+      rentEstimate: "7500",
+      features: ["Beach Access", "Wine Cellar", "Home Theater", "Guest House"],
+      virtualTour: true,
+      agent: { name: "Emily Davis", rating: 5.0, phone: "555-0125" },
+      status: "For Sale",
+      daysOnMarket: 2,
+    },
+  ]);
+
+  return (
+    <div className={styles.container}>
+      {/* <Header
+        user={user}
+        activeView={activeView}
+        setActiveView={setActiveView}
+        styles={styles}
+      /> */}
+
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        styles={styles}
+      />
+
+      {/* Filters */}
+      <div className={styles.filtersSection}>
+        <div className={styles.filtersHeader}>
+          <h3 className={styles.filtersTitle}>Filters</h3>
+          <button
+            className={styles.clearFiltersButton}
+            onClick={() => dispatch({ type: "RESET_FILTERS" })}
+          >
+            Clear All
+          </button>
+        </div>
+
+        <div className={styles.filtersGrid}>
+          <select
+            className={styles.filterSelect}
+            value={filters.propertyType}
+            onChange={(e) =>
+              dispatch({ type: "SET_PROPERTY_TYPE", payload: e.target.value })
+            }
+          >
+            <option value="all">All Types</option>
+            <option value="house">House</option>
+            <option value="condo">Condo</option>
+            <option value="townhouse">Townhouse</option>
+          </select>
+
+          <input
+            type="number"
+            placeholder="Min Price"
+            className={styles.filterInput}
+            value={filters.priceMin}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_PRICE_RANGE",
+                payload: { min: e.target.value, max: filters.priceMax },
+              })
+            }
+            min="0"
+          />
+
+          <input
+            type="number"
+            placeholder="Max Price"
+            className={styles.filterInput}
+            value={filters.priceMax}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_PRICE_RANGE",
+                payload: { min: filters.priceMin, max: e.target.value },
+              })
+            }
+            min="0"
+          />
+
+          <select
+            className={styles.filterSelect}
+            value={filters.beds}
+            onChange={(e) =>
+              dispatch({ type: "SET_BEDS", payload: e.target.value })
+            }
+          >
+            <option value="any">Beds</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+          </select>
+
+          <select
+            className={styles.filterSelect}
+            value={filters.baths}
+            onChange={(e) =>
+              dispatch({ type: "SET_BATHS", payload: e.target.value })
+            }
+          >
+            <option value="any">Baths</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+          </select>
+
+          <button className={styles.moreFiltersButton}>
+            <Filter className={styles.filterIcon} />
+            More Filters
+          </button>
+        </div>
+      </div>
+
+      {/* View Toggle */}
+      <div className={styles.viewToggleSection}>
+        <div className={styles.propertyCount}>
+          {properties.length} properties found
+        </div>
+        <div className={styles.viewToggleButtons}>
+          <button
+            onClick={() => setViewMode("grid")}
+            className={`${styles.viewToggleButton} ${
+              viewMode === "grid" ? styles.viewToggleButtonActive : ""
+            }`}
+          >
+            <Grid className={styles.viewToggleIcon} />
+          </button>
+          <button
+            onClick={() => setViewMode("map")}
+            className={`${styles.viewToggleButton} ${
+              viewMode === "map" ? styles.viewToggleButtonActive : ""
+            }`}
+          >
+            <Map className={styles.viewToggleIcon} />
+          </button>
+        </div>
+      </div>
+
+      {/* Properties Grid */}
+      {viewMode === "grid" ? (
+        <div className={styles.propertiesSection}>
+          <div className={styles.propertiesGrid}>
+            {properties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                styles={styles}
+                setSelectedProperty={setSelectedProperty}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className={styles.mapView}>
+          <Map className={styles.mapPlaceholderIcon} />
+          <p>Interactive Map View</p>
+          <p className={styles.mapPlaceholderText}>
+            Map integration would go here
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
