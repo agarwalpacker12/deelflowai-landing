@@ -13,11 +13,17 @@ function Navbar() {
           {/* Logo */}
           <Link href={"/"}>
             <div className="logo">
-              <Image
+              {/* <Image
                 src="/assets/logo.jpeg"
                 alt="WholesaleAI Logo"
                 width="160"
                 height="40"
+              /> */}
+              <img
+                src={`${
+                  process.env.NEXT_PUBLIC_BASE_PATH || ""
+                }/assets/logo.jpeg`}
+                alt="logo"
               />
             </div>
           </Link>
