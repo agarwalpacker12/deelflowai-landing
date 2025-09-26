@@ -1,8 +1,68 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 function Navbar() {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+
+  // Navigation links for home page (anchor links)
+  const homeNavLinks = [
+    { href: "#about", label: "About us" },
+    { href: "#feature", label: "Features" },
+    { href: "#marketplace", label: "Marketplace" },
+    { href: "#pricing", label: "Pricing" },
+    { href: "/propertyList", label: "Property List" },
+  ];
+
+  // Navigation links for other pages (route to home page sections)
+  const otherPageNavLinks = [
+    { href: "/#about", label: "About us" },
+    { href: "/#feature", label: "Features" },
+    { href: "/#marketplace", label: "Marketplace" },
+    { href: "/#pricing", label: "Pricing" },
+    { href: "/propertyList", label: "Property List" },
+  ];
+
+  const navLinks = isHomePage ? homeNavLinks : otherPageNavLinks;
+
+  const renderNavLink = (link) => {
+    if (link.href.startsWith("/")) {
+      // Internal route
+      return (
+        <Link
+          href={link.href}
+          style={{
+            fontWeight: 500,
+            color: "#6b7280",
+            textDecoration: "none",
+            transition: "color 0.3s ease",
+          }}
+        >
+          {link.label}
+        </Link>
+      );
+    } else {
+      // Anchor link or external link
+      return (
+        <a
+          href={link.href}
+          style={{
+            fontWeight: 500,
+            color: "#6b7280",
+            textDecoration: "none",
+            transition: "color 0.3s ease",
+          }}
+        >
+          {link.label}
+        </a>
+      );
+    }
+  };
+
   return (
     <header className="header">
       <div className="container">
@@ -13,12 +73,6 @@ function Navbar() {
           {/* Logo */}
           <Link href={"/"}>
             <div className="logo">
-              {/* <Image
-                src="/assets/logo.jpeg"
-                alt="WholesaleAI Logo"
-                width="160"
-                height="40"
-              /> */}
               <img
                 src={`${
                   process.env.NEXT_PUBLIC_BASE_PATH || ""
@@ -28,6 +82,7 @@ function Navbar() {
               />
             </div>
           </Link>
+
           {/* Desktop Navigation */}
           <nav className="desktop-navigation">
             <ul
@@ -41,72 +96,9 @@ function Navbar() {
                 padding: 0,
               }}
             >
-              <li>
-                <a
-                  href="#about"
-                  style={{
-                    fontWeight: 500,
-                    color: "#6b7280",
-                    textDecoration: "none",
-                    transition: "color 0.3s ease",
-                  }}
-                >
-                  About us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#feature"
-                  style={{
-                    fontWeight: 500,
-                    color: "#6b7280",
-                    textDecoration: "none",
-                    transition: "color 0.3s ease",
-                  }}
-                >
-                  Features
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#marketplace"
-                  style={{
-                    fontWeight: 500,
-                    color: "#6b7280",
-                    textDecoration: "none",
-                    transition: "color 0.3s ease",
-                  }}
-                >
-                  Marketplace
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#pricing"
-                  style={{
-                    fontWeight: 500,
-                    color: "#6b7280",
-                    textDecoration: "none",
-                    transition: "color 0.3s ease",
-                  }}
-                >
-                  Pricing
-                </a>
-              </li>
-
-              <li>
-                <Link
-                  href="/propertyList"
-                  style={{
-                    fontWeight: 500,
-                    color: "#6b7280",
-                    textDecoration: "none",
-                    transition: "color 0.3s ease",
-                  }}
-                >
-                  Property List
-                </Link>
-              </li>
+              {navLinks.map((link, index) => (
+                <li key={index}>{renderNavLink(link)}</li>
+              ))}
             </ul>
           </nav>
 
@@ -195,22 +187,9 @@ function Navbar() {
           {/* Mobile Navigation Links */}
           <div className="mobile-nav-links">
             <ul>
-              <li>
-                <a href="#about">About us</a>
-              </li>
-              <li>
-                <a href="#feature">Features</a>
-              </li>
-              <li>
-                <a href="#marketplace">Marketplace</a>
-              </li>
-              <li>
-                <a href="#pricing">Pricing</a>
-              </li>
-
-              <li>
-                <Link href="/propertyList">Property List</Link>
-              </li>
+              {navLinks.map((link, index) => (
+                <li key={index}>{renderNavLink(link)}</li>
+              ))}
             </ul>
           </div>
 

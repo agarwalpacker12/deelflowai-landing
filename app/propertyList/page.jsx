@@ -47,6 +47,11 @@ const colors = {
   glassBg: "rgba(255, 255, 255, 0.1)",
 };
 
+// Consistent number formatting to prevent hydration issues
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 // Filter Reducer for better state management
 const filterReducer = (state, action) => {
   switch (action.type) {
@@ -88,6 +93,9 @@ const filterReducer = (state, action) => {
 };
 
 const RealEstatePlatform = () => {
+  // Client-side mounting check to prevent hydration issues
+  const [mounted, setMounted] = useState(false);
+
   // State Management with gamification
   const [activeView, setActiveView] = useState("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,8 +131,8 @@ const RealEstatePlatform = () => {
   });
 
   const [mortgageCalculator, setMortgageCalculator] = useState({
-    homePrice: 500000,
-    downPayment: 100000,
+    homePrice: "500000",
+    downPayment: "100000",
     interestRate: 6.5,
     loanTerm: 30,
   });
@@ -167,15 +175,15 @@ const RealEstatePlatform = () => {
       viewCount: 342,
       savedCount: 28,
       priceHistory: [
-        { id: "hist-001", date: "2024-01", price: 720000 },
-        { id: "hist-002", date: "2024-06", price: 750000 },
+        { id: "hist-001", date: "Jan 2024", price: 720000 },
+        { id: "hist-002", date: "Jun 2024", price: 750000 },
       ],
       neighborhood: {
         walkScore: 85,
         transitScore: 72,
         crimeRate: "Low",
         schools: "A+",
-        avgPrice: 695000,
+        avgPrice: "695000",
         appreciationRate: 7.2,
       },
       wholesaleMetrics: {
@@ -221,8 +229,8 @@ const RealEstatePlatform = () => {
       viewCount: 256,
       savedCount: 19,
       priceHistory: [
-        { id: "hist-003", date: "2024-03", price: 455000 },
-        { id: "hist-004", date: "2024-07", price: 450000 },
+        { id: "hist-003", date: "Mar 2024", price: 455000 },
+        { id: "hist-004", date: "Jul 2024", price: 450000 },
       ],
       neighborhood: {
         walkScore: 92,
@@ -279,13 +287,13 @@ const RealEstatePlatform = () => {
       daysOnMarket: 2,
       viewCount: 523,
       savedCount: 67,
-      priceHistory: [{ id: "hist-005", date: "2024-08", price: 1200000 }],
+      priceHistory: [{ id: "hist-005", date: "Aug 2024", price: 1200000 }],
       neighborhood: {
         walkScore: 78,
         transitScore: 65,
         crimeRate: "Very Low",
         schools: "A+",
-        avgPrice: 1100000,
+        avgPrice: "1100000",
         appreciationRate: 8.5,
       },
       wholesaleMetrics: {
@@ -297,8 +305,15 @@ const RealEstatePlatform = () => {
     },
   ]);
 
-  // Live activity feed simulation
+  // Client mounting effect
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Live activity feed simulation - fixed for hydration
+  useEffect(() => {
+    if (!mounted) return;
+
     const activities = [
       { user: "Alex M.", action: "just viewed", property: "123 Maple Street" },
       {
@@ -314,14 +329,18 @@ const RealEstatePlatform = () => {
       },
     ];
 
+    // Initialize with first activity to avoid empty state hydration mismatch
+    setLiveActivity([activities[0]]);
+
+    let activityIndex = 1;
     const interval = setInterval(() => {
-      const randomActivity =
-        activities[Math.floor(Math.random() * activities.length)];
-      setLiveActivity((prev) => [randomActivity, ...prev].slice(0, 3));
+      const activity = activities[activityIndex % activities.length];
+      setLiveActivity((prev) => [activity, ...prev].slice(0, 3));
+      activityIndex++;
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [mounted]);
 
   // Validate mortgage inputs
   const validateMortgageInput = (field, value) => {
@@ -349,117 +368,6 @@ const RealEstatePlatform = () => {
         return value;
     }
   };
-
-  // Scarcity Banner Component (from existing project)
-  const ScarcityBanner = () =>
-    showScarcity && (
-      <div className={styles.scarcityBanner}>
-        <div className={styles.scarcityContent}>
-          <span className={styles.scarcityItem}>
-            <Flame className={styles.flameIcon} />
-            Only 23 spots left in your area!
-          </span>
-          <span className={styles.scarcityItem}>
-            <Clock className={styles.clockIcon} />
-            Offer expires in 23:59:42
-          </span>
-          <button
-            onClick={() => setShowScarcity(false)}
-            className={styles.closeButton}
-            aria-label="Close banner"
-          >
-            <X className={styles.closeIcon} />
-          </button>
-        </div>
-      </div>
-    );
-
-  // Header Component with Gamification
-  const Header = () => (
-    <header className={styles.header}>
-      <div className={styles.headerContainer}>
-        <div className={styles.headerContent}>
-          <div className={styles.leftSection}>
-            <div className={styles.logoSection}>
-              <div className={styles.logoIcon}>
-                <Building className={styles.buildingIcon} />
-              </div>
-              <div>
-                <span className={styles.logoText}>RealtyPro AI</span>
-                <div className={styles.poweredBy}>Powered by WholesaleAI</div>
-              </div>
-            </div>
-            <nav className={styles.navigation}>
-              {[
-                "Buy",
-                "Sell",
-                "Rent",
-                "Wholesale",
-                "Mortgage",
-                "AI Agents",
-              ].map((item) => (
-                <button
-                  key={item}
-                  onClick={() =>
-                    setActiveView(item.toLowerCase().replace(" ", "-"))
-                  }
-                  className={`${styles.navButton} ${
-                    activeView === item.toLowerCase().replace(" ", "-")
-                      ? styles.navButtonActive
-                      : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          <div className={styles.rightSection}>
-            {/* Gamification Display */}
-            <div className={styles.gamificationDisplay}>
-              <Trophy className={styles.trophyIcon} />
-              <div className={styles.userStats}>
-                <span className={styles.userLevel}>Level {user.level}</span>
-                <span className={styles.userPoints}>{user.points} pts</span>
-              </div>
-              <div className={styles.streakDisplay}>
-                <Flame className={styles.streakFlameIcon} />
-                <span className={styles.streakCount}>{user.streakDays}</span>
-              </div>
-            </div>
-
-            {/* Wallet Balance */}
-            <button className={styles.walletButton}>
-              <Wallet className={styles.walletIcon} />
-              <span className={styles.walletBalance}>
-                ${user.walletBalance.toLocaleString()}
-              </span>
-            </button>
-
-            {/* Notifications */}
-            <button
-              className={styles.notificationButton}
-              aria-label="View notifications"
-            >
-              <Bell className={styles.bellIcon} />
-              {user.notifications > 0 && (
-                <span className={styles.notificationBadge}>
-                  {user.notifications}
-                </span>
-              )}
-            </button>
-
-            {/* User Profile */}
-            <button className={styles.profileButton}>
-              <div className={styles.profileAvatar}>{user.name.charAt(0)}</div>
-              <span className={styles.profileName}>{user.name}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
 
   // Live Activity Feed Component
   const LiveActivityFeed = () => (
@@ -658,13 +566,13 @@ const RealEstatePlatform = () => {
 
         <div className={styles.propertyImageContainer}>
           <div className={styles.propertyImage}>
-            <img
+            {/* <img
               src={`https://via.placeholder.com/800x600?text=${encodeURIComponent(
                 property.address
               )}`}
               alt={`Property at ${property.address}`}
               className={styles.propertyImg}
-            />
+            /> */}
           </div>
 
           {/* Virtual Tour Badge */}
@@ -710,7 +618,7 @@ const RealEstatePlatform = () => {
           {/* Price and AI Score */}
           <div className={styles.priceHeader}>
             <div className={styles.propertyPrice}>
-              ${property.price.toLocaleString()}
+              ${formatNumber(property.price)}
             </div>
             <div className={styles.aiScoreContainer}>
               <div
@@ -741,7 +649,7 @@ const RealEstatePlatform = () => {
             <div className={styles.detailItem}>
               <Square className={styles.detailIcon} />
               <span className={styles.detailText}>
-                {property.sqft.toLocaleString()} sqft
+                {formatNumber(property.sqft)} sqft
               </span>
             </div>
           </div>
@@ -758,13 +666,13 @@ const RealEstatePlatform = () => {
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>ARV:</span>
               <span className={styles.metricValueGreen}>
-                ${property.arv.toLocaleString()}
+                ${formatNumber(property.arv)}
               </span>
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Profit Potential:</span>
               <span className={styles.metricValueBlue}>
-                ${property.profitPotential.toLocaleString()}
+                ${formatNumber(property.profitPotential)}
               </span>
             </div>
             <div className={styles.metricRow}>
@@ -867,13 +775,13 @@ const RealEstatePlatform = () => {
               {/* Image Gallery */}
               <div className={styles.imageGallery}>
                 <div className={styles.galleryContainer}>
-                  <img
+                  {/* <img
                     src={`https://via.placeholder.com/1200x800?text=Property+Image+${
                       currentImageIndex + 1
                     }`}
                     alt={`Property view ${currentImageIndex + 1}`}
                     className={styles.galleryImage}
-                  />
+                  /> */}
                   <button
                     onClick={() =>
                       setCurrentImageIndex(Math.max(0, currentImageIndex - 1))
@@ -976,7 +884,7 @@ const RealEstatePlatform = () => {
                               Purchase Price
                             </div>
                             <div className={styles.metricPriceValue}>
-                              ${property.price.toLocaleString()}
+                              ${formatNumber(property.price)}
                             </div>
                           </div>
                           <div>
@@ -984,7 +892,7 @@ const RealEstatePlatform = () => {
                               After Repair Value
                             </div>
                             <div className={styles.metricGreenValue}>
-                              ${property.arv.toLocaleString()}
+                              ${formatNumber(property.arv)}
                             </div>
                           </div>
                           <div>
@@ -992,7 +900,7 @@ const RealEstatePlatform = () => {
                               Repair Estimate
                             </div>
                             <div className={styles.metricOrangeValue}>
-                              ${property.repairEstimate.toLocaleString()}
+                              ${formatNumber(property.repairEstimate)}
                             </div>
                           </div>
                           <div>
@@ -1000,7 +908,7 @@ const RealEstatePlatform = () => {
                               Profit Potential
                             </div>
                             <div className={styles.metricBlueValue}>
-                              ${property.profitPotential.toLocaleString()}
+                              ${formatNumber(property.profitPotential)}
                             </div>
                           </div>
                         </div>
@@ -1017,7 +925,9 @@ const RealEstatePlatform = () => {
                             </span>
                             <span className={styles.transactionValue}>
                               $
-                              {property.wholesaleMetrics.assignmentFee.toLocaleString()}
+                              {formatNumber(
+                                property.wholesaleMetrics.assignmentFee
+                              )}
                             </span>
                           </div>
                           <div className={styles.transactionRow}>
@@ -1026,7 +936,9 @@ const RealEstatePlatform = () => {
                             </span>
                             <span className={styles.transactionValue}>
                               $
-                              {property.wholesaleMetrics.escrowRequired.toLocaleString()}
+                              {formatNumber(
+                                property.wholesaleMetrics.escrowRequired
+                              )}
                             </span>
                           </div>
                           <div className={styles.transactionRow}>
@@ -1118,7 +1030,7 @@ const RealEstatePlatform = () => {
                               {record.date}
                             </span>
                             <span className={styles.historyPrice}>
-                              ${record.price.toLocaleString()}
+                              ${formatNumber(record.price)}
                             </span>
                           </div>
                         ))}
@@ -1132,7 +1044,7 @@ const RealEstatePlatform = () => {
                   {/* Price Card */}
                   <div className={styles.priceCard}>
                     <div className={styles.priceCardPrice}>
-                      ${property.price.toLocaleString()}
+                      ${formatNumber(property.price)}
                     </div>
                     <div className={styles.priceCardDetails}>
                       <div className={styles.priceDetailItem}>
@@ -1258,8 +1170,8 @@ const RealEstatePlatform = () => {
                     Hi! I've analyzed this property. With an AI score of{" "}
                     {property.aiScore}, this property shows excellent investment
                     potential. The estimated profit of $
-                    {property.profitPotential.toLocaleString()} makes it a
-                    strong wholesale opportunity.
+                    {formatNumber(property.profitPotential)} makes it a strong
+                    wholesale opportunity.
                   </p>
                 </div>
                 <div className={styles.aiMessage}>
@@ -1441,7 +1353,7 @@ const RealEstatePlatform = () => {
                   <p className={styles.aiRecommendationText}>
                     Based on your profile, you qualify for our premium rate of
                     5.9%. This could save you $
-                    {Math.round(monthlyPayment * 0.1).toLocaleString()}/month!
+                    {formatNumber(Math.round(monthlyPayment * 0.1))}/month!
                   </p>
                 </div>
               </div>
@@ -1452,10 +1364,7 @@ const RealEstatePlatform = () => {
 
               <div className={styles.monthlyPaymentDisplay}>
                 <div className={styles.paymentAmount}>
-                  $
-                  {monthlyPayment
-                    .toFixed(0)
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  ${formatNumber(Math.round(monthlyPayment))}
                 </div>
                 <div className={styles.paymentPeriod}>per month</div>
               </div>
@@ -1492,14 +1401,14 @@ const RealEstatePlatform = () => {
                     <span className={styles.totalLabel}>Total Monthly</span>
                     <span className={styles.totalValue}>
                       $
-                      {(
-                        monthlyPayment +
-                        (mortgageCalculator.homePrice * 0.01) / 12 +
-                        150 +
-                        100
-                      )
-                        .toFixed(0)
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      {formatNumber(
+                        Math.round(
+                          monthlyPayment +
+                            (mortgageCalculator.homePrice * 0.01) / 12 +
+                            150 +
+                            100
+                        )
+                      )}
                     </span>
                   </div>
                 </div>
@@ -1509,9 +1418,9 @@ const RealEstatePlatform = () => {
                 <div className={styles.interestLabel}>Total Interest Paid</div>
                 <div className={styles.interestValue}>
                   $
-                  {(totalInterest > 0 ? totalInterest : 0)
-                    .toFixed(0)
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {formatNumber(
+                    Math.round(totalInterest > 0 ? totalInterest : 0)
+                  )}
                 </div>
               </div>
 
@@ -1603,7 +1512,7 @@ const RealEstatePlatform = () => {
       )}
 
       {/* Live Activity Feed */}
-      {liveActivity.length > 0 && <LiveActivityFeed />}
+      {mounted && liveActivity.length > 0 && <LiveActivityFeed />}
     </div>
   );
 };

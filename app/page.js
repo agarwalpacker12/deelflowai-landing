@@ -1,7 +1,5 @@
 "use client";
-import Image from "next/image";
 import DealflowScript from "./DealflowScript";
-import Link from "next/link";
 import Banner from "./component/hero/Banner";
 import SocialProof from "./component/hero/SocialProof";
 import LossSection from "./component/hero/LossSection";
