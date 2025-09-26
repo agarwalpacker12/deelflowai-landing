@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "./component/hero/Navbar";
 import "./style.css";
+import Header from "./component/hero/Header";
 
 export const metadata = {
   title:
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <Header />
         <Navbar />
         {children}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>

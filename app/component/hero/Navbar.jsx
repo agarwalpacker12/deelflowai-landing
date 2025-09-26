@@ -24,6 +24,7 @@ function Navbar() {
                   process.env.NEXT_PUBLIC_BASE_PATH || ""
                 }/assets/logo.jpeg`}
                 alt="logo"
+                style={{ width: "200px", height: "40px", objectFit: "contain" }}
               />
             </div>
           </Link>
