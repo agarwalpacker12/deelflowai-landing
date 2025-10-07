@@ -1,6 +1,37 @@
-import React from "react";
+'use client';
+import React, { useEffect, useState } from "react";
 
 function Header() {
+  const [countdownTime, setCountdownTime] = useState(4 * 3600 + 23 * 60 + 17);
+  const [spots, setSpots] = useState(23);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdownTime((prev) => {
+        if (prev <= 0) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+
+      // Random decreases for psychological effect
+      if (Math.random() < 0.08) {
+        setSpots((prev) => Math.max(1, prev - 1));
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = Math.floor(countdownTime / 3600);
+  const minutes = Math.floor((countdownTime % 3600) / 60);
+  const seconds = countdownTime % 60;
+
+  const timeString = `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
   return (
     <div className="scarcity-banner animate-pulse">
       <div
@@ -17,7 +48,7 @@ function Header() {
             }}
             id="spots-left"
           >
-            23
+            {spots}
           </span>
           <span>spots left!</span>
         </div>
@@ -32,7 +63,7 @@ function Header() {
             }}
             id="countdown"
           >
-            04:23:17
+            {timeString}
           </span>
         </div>
         <div className="scarcity-item">

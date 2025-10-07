@@ -3,11 +3,35 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function Navbar() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
+  const [activeUsers, setActiveUsers] = useState(3847);
+  const [dailyDeals, setDailyDeals] = useState(127);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (Math.random() < 0.15) {
+        setActiveUsers((prev) => {
+          const newValue = prev + Math.floor(Math.random() * 7) - 3;
+          return Math.max(2000, newValue);
+        });
+      }
+
+      if (Math.random() < 0.12) {
+        setDailyDeals((prev) => (Math.random() < 0.7 ? prev + 1 : prev));
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   // Navigation links for home page (anchor links)
   const homeNavLinks = [
@@ -16,6 +40,7 @@ function Navbar() {
     { href: "#marketplace", label: "Marketplace" },
     { href: "#pricing", label: "Pricing" },
     { href: "/propertyList", label: "Search Property" },
+    { href: "/buySell", label: "Buy/Sell" },
   ];
 
   // Navigation links for other pages (route to home page sections)
@@ -25,6 +50,7 @@ function Navbar() {
     { href: "/#marketplace", label: "Marketplace" },
     { href: "/#pricing", label: "Pricing" },
     { href: "/propertyList", label: "Search Property" },
+    { href: "/buySell", label: "Buy/Sell" },
   ];
 
   const navLinks = isHomePage ? homeNavLinks : otherPageNavLinks;
@@ -160,7 +186,11 @@ function Navbar() {
             </div>
 
             {/* Mobile Menu Button */}
-            <button className="mobile-menu-button" id="mobile-menu-toggle">
+            <button
+              className="mobile-menu-button"
+              id="mobile-menu-toggle"
+              onClick={toggleMobileMenu}
+            >
               <svg
                 id="menu-icon"
                 xmlns="http://www.w3.org/2000/svg"
@@ -174,16 +204,29 @@ function Navbar() {
                 strokeLinejoin="round"
                 className="lucide lucide-align-justify-icon lucide-align-justify"
               >
-                <path d="M3 12h18" />
-                <path d="M3 18h18" />
-                <path d="M3 6h18" />
+                {isMobileMenuOpen ? (
+                  <>
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </>
+                ) : (
+                  <>
+                    <path d="M3 12h18" />
+                    <path d="M3 18h18" />
+                    <path d="M3 6h18" />
+                  </>
+                )}
               </svg>
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        <div className="mobile-menu" id="mobile-menu">
+        <div
+          className="mobile-menu"
+          id="mobile-menu"
+          style={{ display: isMobileMenuOpen ? "block" : "none" }}
+        >
           {/* Mobile Navigation Links */}
           <div className="mobile-nav-links">
             <ul>
@@ -247,11 +290,13 @@ function Navbar() {
                   }}
                   className="animate-pulse"
                 ></div>
-                <span id="mobile-active-users">2,847</span>
+                <span id="mobile-active-users">
+                  {activeUsers.toLocaleString()}
+                </span>
                 <span>active</span>
               </span>
               <span>
-                <span id="mobile-daily-deals">47</span> deals today
+                <span id="mobile-daily-deals">{dailyDeals}</span> deals today
               </span>
             </div>
           </div>

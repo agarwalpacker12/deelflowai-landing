@@ -1,5 +1,7 @@
 "use client";
-import DealflowScript from "./DealflowScript";
+import { useEffect, useState } from "react";
+import Navbar from "./component/hero/Navbar";
+import Header from "./component/hero/Header";
 import Banner from "./component/hero/Banner";
 import SocialProof from "./component/hero/SocialProof";
 import LossSection from "./component/hero/LossSection";
@@ -9,8 +11,206 @@ import Pricing from "./component/hero/Pricing";
 import Testimonial from "./component/hero/Testimonial";
 
 export default function Home() {
-  // Close live feed function
-  function closeLiveFeed() {
+  const [showExitPopupState, setShowExitPopupState] = useState(false);
+  const [exitTimer, setExitTimer] = useState(600); // 10 minutes
+
+  const activities = [
+    {
+      user: "Alex K.",
+      action: "earned $34K assignment fee",
+      location: "Phoenix, AZ",
+      avatar: "AK",
+      bgColor: "#3b82f6",
+    },
+    {
+      user: "Lisa R.",
+      action: "AI found perfect buyer match",
+      location: "Denver, CO",
+      avatar: "LR",
+      bgColor: "#10b981",
+    },
+    {
+      user: "David M.",
+      action: "completed double close in 18 hours",
+      location: "Miami, FL",
+      avatar: "DM",
+      bgColor: "#f59e0b",
+    },
+    {
+      user: "Emma P.",
+      action: "blockchain transaction confirmed",
+      location: "Seattle, WA",
+      avatar: "EP",
+      bgColor: "#8b5cf6",
+    },
+    {
+      user: "Carlos J.",
+      action: "closed $52K wholesale deal",
+      location: "Las Vegas, NV",
+      avatar: "CJ",
+      bgColor: "#ef4444",
+    },
+    {
+      user: "Rachel W.",
+      action: "found distressed property lead",
+      location: "Atlanta, GA",
+      avatar: "RW",
+      bgColor: "#06b6d4",
+    },
+    {
+      user: "Mike T.",
+      action: "automated 15 marketing campaigns",
+      location: "Chicago, IL",
+      avatar: "MT",
+      bgColor: "#84cc16",
+    },
+    {
+      user: "Jennifer L.",
+      action: "voice AI scheduled 12 appointments",
+      location: "Houston, TX",
+      avatar: "JL",
+      bgColor: "#ec4899",
+    },
+  ];
+
+  useEffect(() => {
+    // Smooth scrolling for anchor links
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a[href^="#"]');
+      if (target) {
+        e.preventDefault();
+        const element = document.querySelector(target.getAttribute("href"));
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }
+    };
+
+    document.addEventListener("click", handleAnchorClick);
+
+    // Initialize animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-fadeIn");
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    document
+      .querySelectorAll(
+        ".pricing-card, .feature-card, .comparison-card, .blockchain-card"
+      )
+      .forEach((el) => {
+        observer.observe(el);
+      });
+
+    // Live activity feed
+    const activityFeed = document.getElementById("activity-feed");
+    if (activityFeed) {
+      // Add initial activities
+      for (let i = 0; i < 3; i++) {
+        addActivityItem(activities[i]);
+      }
+
+      // Add new activities periodically
+      const activityInterval = setInterval(() => {
+        const randomActivity =
+          activities[Math.floor(Math.random() * activities.length)];
+        addActivityItem(randomActivity);
+      }, Math.random() * 15000 + 8000);
+
+      return () => {
+        clearInterval(activityInterval);
+        document.removeEventListener("click", handleAnchorClick);
+        observer.disconnect();
+      };
+    }
+
+    return () => {
+      document.removeEventListener("click", handleAnchorClick);
+      observer.disconnect();
+    };
+  }, []);
+
+  // Exit intent detection - show popup when scrolling to top
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Only trigger when user scrolls to top (scrollY becomes 0)
+      if (currentScrollY === 0 && lastScrollY > 0) {
+        showExitPopup();
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Exit timer
+  useEffect(() => {
+    if (showExitPopupState) {
+      const timer = setInterval(() => {
+        setExitTimer((prev) => {
+          if (prev <= 0) {
+            clearInterval(timer);
+            closeExitPopup();
+            return 600;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [showExitPopupState]);
+
+  const addActivityItem = (activity) => {
+    const activityFeed = document.getElementById("activity-feed");
+    if (!activityFeed) return;
+
+    const existingItems = activityFeed.querySelectorAll(".activity-item");
+    if (existingItems.length >= 4) {
+      existingItems[existingItems.length - 1].remove();
+    }
+
+    const newItem = document.createElement("div");
+    newItem.className = "activity-item animate-slideIn";
+    newItem.innerHTML = `
+      <div class="activity-avatar" style="background: ${activity.bgColor}">
+        ${activity.avatar}
+      </div>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-weight: 600; font-size: 0.875rem; color: #111827; margin-bottom: 0.25rem;">
+          ${activity.user}
+        </div>
+        <div style="font-size: 0.75rem; color: #6b7280; line-height: 1.4;">
+          ${activity.action}
+        </div>
+        <div style="font-size: 0.625rem; color: #9ca3af; margin-top: 0.25rem;">
+          Just now • ${activity.location}
+        </div>
+      </div>
+    `;
+
+    activityFeed.insertBefore(newItem, activityFeed.firstChild);
+  };
+
+  const closeLiveFeed = () => {
     const liveFeed = document.getElementById("live-feed");
     if (liveFeed) {
       liveFeed.style.transform = "translateX(100%)";
@@ -19,46 +219,53 @@ export default function Home() {
         liveFeed.style.display = "none";
       }, 300);
     }
-  }
+  };
 
-  // Close exit popup function
-  function closeExitPopup() {
+  const closeExitPopup = () => {
     const exitPopup = document.getElementById("exit-popup");
     if (exitPopup) {
-      exitPopup.style.display = "none";
+      exitPopup.classList.remove("show");
     }
-  }
+  };
 
-  // Claim discount function
-  function claimDiscount() {
-    // Redirect to signup or handle discount claim
-    window.location.href = "https://apps.deelflowai.com/register";
-  }
+  const showExitPopup = () => {
+    const popup = document.getElementById("exit-popup");
+    if (popup) {
+      popup.classList.add("show");
+    }
+  };
 
-  // Add this to your init function or after the other global assignments
-  if (typeof window !== "undefined") {
-    window.closeLiveFeed = closeLiveFeed;
-    window.closeExitPopup = closeExitPopup;
-    window.claimDiscount = claimDiscount;
+  const claimDiscount = () => {
+    if (typeof gtag !== "undefined") {
+      gtag("event", "claim_discount", {
+        discount_amount: 67,
+        original_price: 797,
+        discounted_price: 197,
+      });
+    }
 
-    // Show exit popup when user scrolls to top
-    const handleScroll = () => {
-      if (window.scrollY === 0) {
-        const exitPopup = document.getElementById("exit-popup");
-        if (exitPopup) {
-          exitPopup.style.display = "flex";
-        }
-      }
-    };
+    closeExitPopup();
 
-    window.addEventListener("scroll", handleScroll);
-  }
+    const signupSection = document.getElementById("signup-form");
+    if (signupSection) {
+      signupSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
+  const minutes = Math.floor(exitTimer / 60);
+  const seconds = exitTimer % 60;
+  const timerString = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
   return (
     <>
       {/* Scarcity Banner */}
+      <Header />
 
-      {/* Header */}
+      {/* Navbar */}
+      <Navbar />
 
       {/* Hero Section */}
       <Banner />
@@ -250,140 +457,14 @@ export default function Home() {
             </button>
 
             <p className="exit-popup-timer">
-              ⏰ This offer expires in <span id="exit-timer">10:00</span>{" "}
-              minutes
+              ⏰ This offer expires in{" "}
+              <span id="exit-timer">{timerString}</span> minutes
             </p>
           </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "1rem",
-                }}
-              >
-                <i
-                  data-lucide="brain"
-                  style={{
-                    width: "2rem",
-                    height: "2rem",
-                    color: "#3b82f6",
-                    marginRight: "0.5rem",
-                  }}
-                ></i>
-                <span style={{ fontSize: "1.25rem", fontWeight: "bold" }}>
-                  Deelflow AI
-                </span>
-              </div>
-              <p style={{ color: "#9ca3af", marginBottom: "1rem" }}>
-                The world's most advanced AI-powered real estate wholesaling
-                platform.
-              </p>
-              <div className="footer-social">
-                <a href="#" className="footer-social-link">
-                  f
-                </a>
-                <a
-                  href="#"
-                  className="footer-social-link"
-                  style={{ background: "#1da1f2" }}
-                >
-                  t
-                </a>
-                <a
-                  href="#"
-                  className="footer-social-link"
-                  style={{ background: "#0077b5" }}
-                >
-                  in
-                </a>
-              </div>
-            </div>
-
-            <div className="footer-section">
-              <h4>Features</h4>
-              <ul>
-                <li>
-                  <a href="#">AI Property Analysis</a>
-                </li>
-                <li>
-                  <a href="#">Blockchain Escrow</a>
-                </li>
-                <li>
-                  <a href="#">Voice AI Assistant</a>
-                </li>
-                <li>
-                  <a href="#">Marketing Automation</a>
-                </li>
-                <li>
-                  <a href="#">Real-Time Trading</a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="footer-section">
-              <h4>Company</h4>
-              <ul>
-                <li>
-                  <a href="#">About Us</a>
-                </li>
-                <li>
-                  <a href="#">Success Stories</a>
-                </li>
-                <li>
-                  <a href="#">Support Center</a>
-                </li>
-                <li>
-                  <a href="#">Contact Us</a>
-                </li>
-                <li>
-                  <a href="#">Careers</a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="footer-section">
-              <h4>Legal & Trust</h4>
-              <ul>
-                <li>
-                  <a href="#">Privacy Policy</a>
-                </li>
-                <li>
-                  <a href="#">Terms of Service</a>
-                </li>
-                <li>
-                  <a href="#">Cookie Policy</a>
-                </li>
-                <li>
-                  <a href="#">Compliance</a>
-                </li>
-                <li>
-                  <a href="#">Security</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            <p>&copy; 2024 Deelflow AI. All rights reserved.</p>
-            <div className="footer-security">
-              <i
-                data-lucide="lock"
-                style={{ width: "1rem", height: "1rem" }}
-              ></i>
-              <span>Secured by 256-bit SSL encryption</span>
-            </div>
-          </div>
-        </div>
-      </footer>
-      <DealflowScript />
+      {/* <DealflowScript /> */}
     </>
   );
 }

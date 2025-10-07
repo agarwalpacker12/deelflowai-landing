@@ -9,7 +9,6 @@ import {
   Heart,
   Filter,
   TrendingUp,
-  Building,
   Users,
   Star,
   ChevronLeft,
@@ -17,35 +16,17 @@ import {
   Play,
   Grid,
   Map,
-  Bell,
   X,
   Check,
   Zap,
   Shield,
   Clock,
   Activity,
-  Trophy,
-  Flame,
   Brain,
   Eye,
   Lock,
-  Wallet,
 } from "lucide-react";
 import styles from "./page.module.css";
-
-// Psychological Color Palette from existing project
-const colors = {
-  trustBlue: "#2563eb",
-  urgencyOrange: "#ea580c",
-  successGreen: "#16a34a",
-  premiumPurple: "#7c3aed",
-  warningRed: "#dc2626",
-  neutralGray: "#6b7280",
-  lightBg: "#f8fafc",
-  darkBg: "#0f172a",
-  cardBg: "rgba(255, 255, 255, 0.95)",
-  glassBg: "rgba(255, 255, 255, 0.1)",
-};
 
 // Consistent number formatting to prevent hydration issues
 const formatNumber = (num) => {
@@ -101,7 +82,7 @@ const RealEstatePlatform = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState("grid");
   const [selectedProperty, setSelectedProperty] = useState(null);
-  const [showScarcity, setShowScarcity] = useState(true);
+
   const [liveActivity, setLiveActivity] = useState([]);
 
   // User with gamification data from existing project
@@ -306,9 +287,9 @@ const RealEstatePlatform = () => {
   ]);
 
   // Client mounting effect
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
 
   // Live activity feed simulation - fixed for hydration
   useEffect(() => {

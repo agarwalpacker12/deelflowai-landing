@@ -1,6 +1,79 @@
-import React from "react";
+'use client';
+import React, { useEffect, useState } from "react";
 
 function Banner() {
+  const [countdownTime, setCountdownTime] = useState(4 * 3600 + 23 * 60 + 17);
+  const [spots, setSpots] = useState(23);
+  const [stats, setStats] = useState({
+    dealsProcessed: 0,
+    avgProfit: 0,
+    timeToClose: 0,
+    successRate: 0,
+  });
+
+  useEffect(() => {
+    // Countdown timer
+    const timer = setInterval(() => {
+      setCountdownTime((prev) => {
+        if (prev <= 0) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+
+      if (Math.random() < 0.08) {
+        setSpots((prev) => Math.max(1, prev - 1));
+      }
+    }, 1000);
+
+    // Animate stats
+    const statsConfig = [
+      { key: 'dealsProcessed', target: 2.3 },
+      { key: 'avgProfit', target: 28.5 },
+      { key: 'timeToClose', target: 2.3 },
+      { key: 'successRate', target: 94.2 },
+    ];
+
+    statsConfig.forEach((stat) => {
+      let current = 0;
+      const increment = stat.target / 100;
+
+      const counter = setInterval(() => {
+        current += increment;
+        if (current >= stat.target) {
+          current = stat.target;
+          clearInterval(counter);
+        }
+
+        setStats((prev) => ({
+          ...prev,
+          [stat.key]: current,
+        }));
+      }, 20);
+    });
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = Math.floor(countdownTime / 3600);
+  const minutes = Math.floor((countdownTime % 3600) / 60);
+  const seconds = countdownTime % 60;
+
+  const timeString = `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+  const scrollToSignup = () => {
+    const signupSection = document.getElementById('signup-form');
+    if (signupSection) {
+      signupSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
   return (
     <section className="hero">
       <div className="container">
@@ -127,7 +200,7 @@ function Banner() {
                 ></i>
               </div>
               <div className="stat-value" style={{ color: "#10b981" }}>
-                $2.3B
+                ${stats.dealsProcessed.toFixed(1)}B
               </div>
               <div className="stat-label">Total Volume Processed</div>
             </div>
@@ -144,7 +217,7 @@ function Banner() {
                 ></i>
               </div>
               <div className="stat-value" style={{ color: "#fbbf24" }}>
-                $28.5K
+                ${stats.avgProfit.toFixed(1)}K
               </div>
               <div className="stat-label">Average Member Profit</div>
             </div>
@@ -161,7 +234,7 @@ function Banner() {
                 ></i>
               </div>
               <div className="stat-value" style={{ color: "#3b82f6" }}>
-                2.3
+                {stats.timeToClose.toFixed(1)}
               </div>
               <div className="stat-label">Days Average Close</div>
             </div>
@@ -178,7 +251,7 @@ function Banner() {
                 ></i>
               </div>
               <div className="stat-value" style={{ color: "#f5f4f7" }}>
-                94.2%
+                {stats.successRate.toFixed(1)}%
               </div>
               <div className="stat-label">AI Accuracy Rate</div>
             </div>
@@ -206,11 +279,11 @@ function Banner() {
               style={{ fontSize: "1.25rem", fontWeight: "bold" }}
               id="hero-spots-left"
             >
-              23
+              {spots}
             </span>
             spots remaining • Price increases in
             <span style={{ fontFamily: "monospace" }} id="hero-countdown">
-              04:23:17
+              {timeString}
             </span>
           </div>
 

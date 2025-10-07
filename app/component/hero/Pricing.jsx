@@ -1,6 +1,61 @@
-import React from "react";
+'use client';
+import React, { useEffect, useState } from "react";
 
 function Pricing() {
+  const [countdownTime, setCountdownTime] = useState(4 * 3600 + 23 * 60 + 17);
+  const [professionalSpots, setProfessionalSpots] = useState(15);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdownTime((prev) => {
+        if (prev <= 0) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+
+      // Random decreases for professional spots
+      if (Math.random() < 0.05) {
+        setProfessionalSpots((prev) => Math.max(1, prev - 1));
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = Math.floor(countdownTime / 3600);
+  const minutes = Math.floor((countdownTime % 3600) / 60);
+  const seconds = countdownTime % 60;
+
+  const timeString = `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+  const selectPlan = (planName) => {
+    console.log(`Selected plan: ${planName}`);
+
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'select_plan', {
+        plan_name: planName,
+        value: planName === 'starter' ? 297 : planName === 'professional' ? 797 : 1997,
+      });
+    }
+
+    const signupSection = document.getElementById('signup-form');
+    if (signupSection) {
+      signupSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+
+    const planField = document.getElementById('selected-plan');
+    if (planField) {
+      planField.value = planName;
+    }
+  };
+
   return (
     <section className="pricing" id="pricing">
       <div className="container">
@@ -9,7 +64,7 @@ function Pricing() {
           <p className="section-subtitle">
             Limited-time pricing for the next
             <span id="pricing-countdown" className="countdown-text">
-              04:23:17
+              {timeString}
             </span>
           </p>
         </div>
@@ -56,7 +111,7 @@ function Pricing() {
 
             <button
               className="pricing-button pricing-button-starter"
-              onClick={() => selectPlan("starter")}
+              onClick={() => selectPlan('starter')}
             >
               Start Free Trial
             </button>
@@ -116,13 +171,13 @@ function Pricing() {
 
             <button
               className="pricing-button pricing-button-popular"
-              onClick={() => selectPlan("professional")}
+              onClick={() => selectPlan('professional')}
             >
               Start Free Trial
             </button>
 
             <div className="pricing-notice pricing-notice-popular">
-              Only <span id="professional-spots">15</span> spots left at this
+              Only <span id="professional-spots">{professionalSpots}</span> spots left at this
               price!
             </div>
           </div>
@@ -172,7 +227,7 @@ function Pricing() {
 
             <button
               className="pricing-button pricing-button-enterprise"
-              onClick={() => selectPlan("enterprise")}
+              onClick={() => selectPlan('enterprise')}
             >
               Contact Sales
             </button>
