@@ -33,20 +33,12 @@ const SellerBuyerForms = () => {
     reasonForSelling: "",
 
     // Buyer specific
-    buyerAddress: "",
-    buyerCity: "",
-    buyerState: "",
-    buyerProvince: "",
-    buyerCountry: "",
-    priceRangeMin: "",
-    priceRangeMax: "",
-    preferredLocation: "",
-    preferredCountry: "",
-    preferredState: "",
-    preferredProvince: "",
-    preferredCity: "",
-    intendedPurpose: "",
     investmentExperience: "",
+    preferredAreas: "",
+    budget: "",
+    propertyTypes: [],
+    investmentStrategy: "",
+    financingType: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -619,10 +611,9 @@ const SellerBuyerForms = () => {
           );
         case 2:
           return (
-            formData.priceRangeMin &&
-            formData.priceRangeMax &&
-            formData.preferredLocation &&
-            formData.intendedPurpose
+            formData.budget &&
+            formData.preferredAreas &&
+            formData.propertyTypes.length > 0
           );
         default:
           return true;
@@ -697,20 +688,12 @@ const SellerBuyerForms = () => {
       mortgageBalance: "",
       timeline: "",
       reasonForSelling: "",
-      buyerAddress: "",
-      buyerCity: "",
-      buyerState: "",
-      buyerProvince: "",
-      buyerCountry: "",
-      priceRangeMin: "",
-      priceRangeMax: "",
-      preferredLocation: "",
-      preferredCountry: "",
-      preferredState: "",
-      preferredProvince: "",
-      preferredCity: "",
-      intendedPurpose: "",
       investmentExperience: "",
+      preferredAreas: "",
+      budget: "",
+      propertyTypes: [],
+      investmentStrategy: "",
+      financingType: "",
     });
   };
 
@@ -1314,108 +1297,30 @@ const SellerBuyerForms = () => {
               {/* Buyer-specific questions */}
               {activeForm === "buyer" && (
                 <div style={styles.sectionDivider}>
-                  <div style={styles.formGrid}>
-                    <div style={{ ...styles.inputGroup, ...styles.fullWidth }}>
-                      <label style={styles.label}>Your Address</label>
-                      <div style={styles.inputWrapper}>
-                        <svg
-                          style={styles.inputIcon}
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
-                          <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        <input
-                          type="text"
-                          value={formData.buyerAddress}
-                          onChange={(e) =>
-                            handleInputChange("buyerAddress", e.target.value)
-                          }
-                          style={{ ...styles.input, ...styles.inputWithIcon }}
-                          placeholder="123 Main Street"
-                        />
-                      </div>
-                    </div>
-
-                    <div style={styles.inputGroup}>
-                      <label style={styles.label}>City</label>
-                      <input
-                        type="text"
-                        value={formData.buyerCity}
-                        onChange={(e) =>
-                          handleInputChange("buyerCity", e.target.value)
-                        }
-                        style={styles.input}
-                        placeholder="New York"
-                      />
-                    </div>
-
-                    <div style={styles.inputGroup}>
-                      <label style={styles.label}>State/Province</label>
-                      <input
-                        type="text"
-                        value={formData.buyerState}
-                        onChange={(e) =>
-                          handleInputChange("buyerState", e.target.value)
-                        }
-                        style={styles.input}
-                        placeholder="NY / Ontario"
-                      />
-                    </div>
-
-                    <div style={styles.inputGroup}>
-                      <label style={styles.label}>Country</label>
-                      <select
-                        value={formData.buyerCountry}
-                        onChange={(e) =>
-                          handleInputChange("buyerCountry", e.target.value)
-                        }
-                        style={styles.select}
-                      >
-                        <option value="">Select Country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="MX">Mexico</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="AU">Australia</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-
-                    <div style={styles.inputGroup}>
-                      <label style={styles.label}>
-                        Investment Experience *
-                      </label>
-                      <select
-                        value={formData.investmentExperience}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "investmentExperience",
-                            e.target.value
-                          )
-                        }
-                        style={styles.select}
-                      >
-                        <option value="">Select your experience level</option>
-                        <option value="beginner">
-                          New to Real Estate Investing
-                        </option>
-                        <option value="some">
-                          Some Experience (1-5 deals)
-                        </option>
-                        <option value="experienced">
-                          Experienced (5+ deals)
-                        </option>
-                        <option value="professional">
-                          Professional Investor
-                        </option>
-                      </select>
-                    </div>
+                  <div style={styles.inputGroup}>
+                    <label style={styles.label}>Investment Experience *</label>
+                    <select
+                      value={formData.investmentExperience}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "investmentExperience",
+                          e.target.value
+                        )
+                      }
+                      style={styles.select}
+                    >
+                      <option value="">Select your experience level</option>
+                      <option value="beginner">
+                        New to Real Estate Investing
+                      </option>
+                      <option value="some">Some Experience (1-5 deals)</option>
+                      <option value="experienced">
+                        Experienced (5+ deals)
+                      </option>
+                      <option value="professional">
+                        Professional Investor
+                      </option>
+                    </select>
                   </div>
                 </div>
               )}
@@ -1637,16 +1542,16 @@ const SellerBuyerForms = () => {
             </div>
           )}
 
-          {/* Step 2: Purchase Preferences (Buyer) */}
+          {/* Step 2: Investment Preferences (Buyer) */}
           {currentStep === 2 && activeForm === "buyer" && (
             <div style={styles.step}>
               <h2 style={styles.stepTitle}>
-                Tell us about your purchase preferences
+                Tell us about your investment preferences
               </h2>
 
               <div style={styles.formGrid}>
                 <div style={styles.inputGroup}>
-                  <label style={styles.label}>Price Range - Minimum *</label>
+                  <label style={styles.label}>Investment Budget *</label>
                   <div style={styles.inputWrapper}>
                     <svg
                       style={styles.inputIcon}
@@ -1660,99 +1565,32 @@ const SellerBuyerForms = () => {
                       <line x1="12" y1="1" x2="12" y2="23" />
                       <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                     </svg>
-                    <input
-                      type="number"
-                      value={formData.priceRangeMin}
+                    <select
+                      value={formData.budget}
                       onChange={(e) =>
-                        handleInputChange("priceRangeMin", e.target.value)
+                        handleInputChange("budget", e.target.value)
                       }
-                      style={{ ...styles.input, ...styles.inputWithIcon }}
-                      placeholder="50,000"
-                    />
+                      style={{ ...styles.select, ...styles.inputWithIcon }}
+                    >
+                      <option value="">Select Budget Range</option>
+                      <option value="50k-100k">$50K - $100K</option>
+                      <option value="100k-200k">$100K - $200K</option>
+                      <option value="200k-300k">$200K - $300K</option>
+                      <option value="300k-500k">$300K - $500K</option>
+                      <option value="500k+">$500K+</option>
+                    </select>
                   </div>
                 </div>
 
                 <div style={styles.inputGroup}>
-                  <label style={styles.label}>Price Range - Maximum *</label>
-                  <div style={styles.inputWrapper}>
-                    <svg
-                      style={styles.inputIcon}
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <line x1="12" y1="1" x2="12" y2="23" />
-                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                    </svg>
-                    <input
-                      type="number"
-                      value={formData.priceRangeMax}
-                      onChange={(e) =>
-                        handleInputChange("priceRangeMax", e.target.value)
-                      }
-                      style={{ ...styles.input, ...styles.inputWithIcon }}
-                      placeholder="200,000"
-                    />
-                  </div>
-                </div>
-
-                <div style={{ ...styles.inputGroup, ...styles.fullWidth }}>
                   <label style={styles.label}>
-                    Preferred Location (General Area) *
+                    Preferred Investment Areas *
                   </label>
                   <input
                     type="text"
-                    value={formData.preferredLocation}
+                    value={formData.preferredAreas}
                     onChange={(e) =>
-                      handleInputChange("preferredLocation", e.target.value)
-                    }
-                    style={styles.input}
-                    placeholder="Dallas Metro Area, Austin Region, etc."
-                  />
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>Preferred Country</label>
-                  <select
-                    value={formData.preferredCountry}
-                    onChange={(e) =>
-                      handleInputChange("preferredCountry", e.target.value)
-                    }
-                    style={styles.select}
-                  >
-                    <option value="">Select Country</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="MX">Mexico</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="AU">Australia</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>Preferred State/Province</label>
-                  <input
-                    type="text"
-                    value={formData.preferredState}
-                    onChange={(e) =>
-                      handleInputChange("preferredState", e.target.value)
-                    }
-                    style={styles.input}
-                    placeholder="Texas, California, Ontario"
-                  />
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>Preferred City</label>
-                  <input
-                    type="text"
-                    value={formData.preferredCity}
-                    onChange={(e) =>
-                      handleInputChange("preferredCity", e.target.value)
+                      handleInputChange("preferredAreas", e.target.value)
                     }
                     style={styles.input}
                     placeholder="Dallas, Austin, Houston"
@@ -1761,62 +1599,69 @@ const SellerBuyerForms = () => {
 
                 <div style={{ ...styles.inputGroup, ...styles.fullWidth }}>
                   <label style={styles.label}>
-                    Intended Purpose of Purchase *
+                    Property Types of Interest * (Select all that apply)
                   </label>
-                  <div style={styles.radioGroup}>
-                    <label style={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="intendedPurpose"
-                        value="primary-residence"
-                        checked={
-                          formData.intendedPurpose === "primary-residence"
-                        }
-                        onChange={(e) =>
-                          handleInputChange("intendedPurpose", e.target.value)
-                        }
-                      />
-                      Primary Residence
-                    </label>
-                    <label style={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="intendedPurpose"
-                        value="rental-investment"
-                        checked={
-                          formData.intendedPurpose === "rental-investment"
-                        }
-                        onChange={(e) =>
-                          handleInputChange("intendedPurpose", e.target.value)
-                        }
-                      />
-                      Rental Investment
-                    </label>
-                    <label style={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="intendedPurpose"
-                        value="fix-and-flip"
-                        checked={formData.intendedPurpose === "fix-and-flip"}
-                        onChange={(e) =>
-                          handleInputChange("intendedPurpose", e.target.value)
-                        }
-                      />
-                      Fix and Flip
-                    </label>
-                    <label style={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="intendedPurpose"
-                        value="wholesale"
-                        checked={formData.intendedPurpose === "wholesale"}
-                        onChange={(e) =>
-                          handleInputChange("intendedPurpose", e.target.value)
-                        }
-                      />
-                      Wholesale
-                    </label>
+                  <div style={styles.checkboxGrid}>
+                    {[
+                      "Single Family Homes",
+                      "Multi-Family Properties",
+                      "Townhouses",
+                      "Condominiums",
+                      "Commercial Properties",
+                      "Fix & Flip Opportunities",
+                    ].map((type) => (
+                      <label key={type} style={styles.checkboxLabel}>
+                        <input
+                          type="checkbox"
+                          checked={formData.propertyTypes.includes(type)}
+                          onChange={(e) =>
+                            handleArrayChange(
+                              "propertyTypes",
+                              type,
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <span>{type}</span>
+                      </label>
+                    ))}
                   </div>
+                </div>
+
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>Investment Strategy</label>
+                  <select
+                    value={formData.investmentStrategy}
+                    onChange={(e) =>
+                      handleInputChange("investmentStrategy", e.target.value)
+                    }
+                    style={styles.select}
+                  >
+                    <option value="">Select Strategy</option>
+                    <option value="flip">Fix & Flip</option>
+                    <option value="rental">Buy & Hold Rental</option>
+                    <option value="wholesale">Wholesaling</option>
+                    <option value="brrrr">BRRRR Strategy</option>
+                    <option value="commercial">Commercial Investment</option>
+                  </select>
+                </div>
+
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>Financing Type</label>
+                  <select
+                    value={formData.financingType}
+                    onChange={(e) =>
+                      handleInputChange("financingType", e.target.value)
+                    }
+                    style={styles.select}
+                  >
+                    <option value="">Select Financing</option>
+                    <option value="cash">Cash Purchase</option>
+                    <option value="conventional">Conventional Loan</option>
+                    <option value="hard-money">Hard Money Loan</option>
+                    <option value="portfolio">Portfolio Lender</option>
+                    <option value="seller-financing">Seller Financing</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -1878,47 +1723,23 @@ const SellerBuyerForms = () => {
 
                 {activeForm === "buyer" && (
                   <>
-                    <h3 style={styles.reviewTitle}>Purchase Preferences</h3>
+                    <h3 style={styles.reviewTitle}>Investment Preferences</h3>
                     <div style={styles.reviewGrid}>
                       <p style={styles.reviewItem}>
-                        <strong>Price Range:</strong> ${formData.priceRangeMin}{" "}
-                        - ${formData.priceRangeMax}
+                        <strong>Budget:</strong> {formData.budget}
                       </p>
                       <p style={styles.reviewItem}>
-                        <strong>Preferred Location:</strong>{" "}
-                        {formData.preferredLocation}
+                        <strong>Preferred Areas:</strong>{" "}
+                        {formData.preferredAreas}
                       </p>
                       <p style={styles.reviewItem}>
-                        <strong>Intended Purpose:</strong>{" "}
-                        {formData.intendedPurpose}
+                        <strong>Property Types:</strong>{" "}
+                        {formData.propertyTypes.join(", ")}
                       </p>
                       <p style={styles.reviewItem}>
                         <strong>Investment Experience:</strong>{" "}
                         {formData.investmentExperience}
                       </p>
-                      {formData.buyerAddress && (
-                        <p style={styles.reviewItem}>
-                          <strong>Your Address:</strong> {formData.buyerAddress}
-                          , {formData.buyerCity}, {formData.buyerCountry}
-                        </p>
-                      )}
-                      {formData.preferredCountry && (
-                        <p style={styles.reviewItem}>
-                          <strong>Target Country:</strong>{" "}
-                          {formData.preferredCountry}
-                        </p>
-                      )}
-                      {formData.preferredState && (
-                        <p style={styles.reviewItem}>
-                          <strong>Target State/Province:</strong>{" "}
-                          {formData.preferredState}
-                        </p>
-                      )}
-                      {formData.preferredCity && (
-                        <p style={styles.reviewItem}>
-                          <strong>Target City:</strong> {formData.preferredCity}
-                        </p>
-                      )}
                     </div>
                   </>
                 )}
