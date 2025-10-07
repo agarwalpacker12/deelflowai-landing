@@ -39,8 +39,8 @@ function Navbar() {
     { href: "#feature", label: "Features" },
     { href: "#marketplace", label: "Marketplace" },
     { href: "#pricing", label: "Pricing" },
-    { href: "/propertyList", label: "Search Property" },
-    { href: "/buySell", label: "Buy/Sell" },
+    { href: "/propertyList", label: "Property List" },
+    { href: "/buySell", label: "Search Property" },
   ];
 
   // Navigation links for other pages (route to home page sections)
@@ -49,8 +49,8 @@ function Navbar() {
     { href: "/#feature", label: "Features" },
     { href: "/#marketplace", label: "Marketplace" },
     { href: "/#pricing", label: "Pricing" },
-    { href: "/propertyList", label: "Search Property" },
-    { href: "/buySell", label: "Buy/Sell" },
+    { href: "/propertyList", label: "Property List" },
+    { href: "/buySell", label: "Search Property" },
   ];
 
   const navLinks = isHomePage ? homeNavLinks : otherPageNavLinks;
