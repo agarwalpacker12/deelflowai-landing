@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-const SellerBuyerForms = () => {
+const SellerForms = () => {
   const [activeForm, setActiveForm] = useState("none"); // 'seller', 'buyer', 'none'
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -600,24 +600,6 @@ const SellerBuyerForms = () => {
         default:
           return true;
       }
-    } else if (activeForm === "buyer") {
-      switch (step) {
-        case 1:
-          return (
-            formData.name &&
-            formData.email &&
-            formData.phone &&
-            formData.investmentExperience
-          );
-        case 2:
-          return (
-            formData.budget &&
-            formData.preferredAreas &&
-            formData.propertyTypes.length > 0
-          );
-        default:
-          return true;
-      }
     }
     return false;
   };
@@ -816,117 +798,6 @@ const SellerBuyerForms = () => {
                 style={{ ...styles.cardButton, ...styles.sellButton }}
               >
                 Submit Your Property
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12,5 19,12 12,19" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Find Investment Properties Card */}
-            <div style={styles.selectionCard}>
-              <div style={styles.cardHeader}>
-                <div style={{ ...styles.cardIcon, ...styles.buyIcon }}>
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" />
-                  </svg>
-                </div>
-                <h2 style={styles.cardTitle}>Find Properties</h2>
-                <p style={styles.cardSubtitle}>
-                  Discover profitable investment opportunities
-                </p>
-              </div>
-
-              <div style={styles.cardBenefits}>
-                <div style={styles.benefit}>
-                  <svg
-                    style={styles.checkIcon}
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M9 11l3 3L22 4" />
-                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                  </svg>
-                  <span style={styles.benefitText}>
-                    AI-curated investment deals
-                  </span>
-                </div>
-                <div style={styles.benefit}>
-                  <svg
-                    style={styles.checkIcon}
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M9 11l3 3L22 4" />
-                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                  </svg>
-                  <span style={styles.benefitText}>
-                    Below-market properties
-                  </span>
-                </div>
-                <div style={styles.benefit}>
-                  <svg
-                    style={styles.checkIcon}
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M9 11l3 3L22 4" />
-                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                  </svg>
-                  <span style={styles.benefitText}>
-                    Instant profit analysis
-                  </span>
-                </div>
-                <div style={styles.benefit}>
-                  <svg
-                    style={styles.checkIcon}
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M9 11l3 3L22 4" />
-                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                  </svg>
-                  <span style={styles.benefitText}>
-                    Blockchain-secured transactions
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => startForm("buyer")}
-                style={{ ...styles.cardButton, ...styles.buyButton }}
-              >
-                Find Properties
                 <svg
                   width="20"
                   height="20"
@@ -1295,35 +1166,6 @@ const SellerBuyerForms = () => {
               )}
 
               {/* Buyer-specific questions */}
-              {activeForm === "buyer" && (
-                <div style={styles.sectionDivider}>
-                  <div style={styles.inputGroup}>
-                    <label style={styles.label}>Investment Experience *</label>
-                    <select
-                      value={formData.investmentExperience}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "investmentExperience",
-                          e.target.value
-                        )
-                      }
-                      style={styles.select}
-                    >
-                      <option value="">Select your experience level</option>
-                      <option value="beginner">
-                        New to Real Estate Investing
-                      </option>
-                      <option value="some">Some Experience (1-5 deals)</option>
-                      <option value="experienced">
-                        Experienced (5+ deals)
-                      </option>
-                      <option value="professional">
-                        Professional Investor
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              )}
 
               <div style={styles.transitionMessage}>
                 <p style={styles.transitionText}>
@@ -1543,129 +1385,6 @@ const SellerBuyerForms = () => {
           )}
 
           {/* Step 2: Investment Preferences (Buyer) */}
-          {currentStep === 2 && activeForm === "buyer" && (
-            <div style={styles.step}>
-              <h2 style={styles.stepTitle}>
-                Tell us about your investment preferences
-              </h2>
-
-              <div style={styles.formGrid}>
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>Investment Budget *</label>
-                  <div style={styles.inputWrapper}>
-                    <svg
-                      style={styles.inputIcon}
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <line x1="12" y1="1" x2="12" y2="23" />
-                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                    </svg>
-                    <select
-                      value={formData.budget}
-                      onChange={(e) =>
-                        handleInputChange("budget", e.target.value)
-                      }
-                      style={{ ...styles.select, ...styles.inputWithIcon }}
-                    >
-                      <option value="">Select Budget Range</option>
-                      <option value="50k-100k">$50K - $100K</option>
-                      <option value="100k-200k">$100K - $200K</option>
-                      <option value="200k-300k">$200K - $300K</option>
-                      <option value="300k-500k">$300K - $500K</option>
-                      <option value="500k+">$500K+</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>
-                    Preferred Investment Areas *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.preferredAreas}
-                    onChange={(e) =>
-                      handleInputChange("preferredAreas", e.target.value)
-                    }
-                    style={styles.input}
-                    placeholder="Dallas, Austin, Houston"
-                  />
-                </div>
-
-                <div style={{ ...styles.inputGroup, ...styles.fullWidth }}>
-                  <label style={styles.label}>
-                    Property Types of Interest * (Select all that apply)
-                  </label>
-                  <div style={styles.checkboxGrid}>
-                    {[
-                      "Single Family Homes",
-                      "Multi-Family Properties",
-                      "Townhouses",
-                      "Condominiums",
-                      "Commercial Properties",
-                      "Fix & Flip Opportunities",
-                    ].map((type) => (
-                      <label key={type} style={styles.checkboxLabel}>
-                        <input
-                          type="checkbox"
-                          checked={formData.propertyTypes.includes(type)}
-                          onChange={(e) =>
-                            handleArrayChange(
-                              "propertyTypes",
-                              type,
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span>{type}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>Investment Strategy</label>
-                  <select
-                    value={formData.investmentStrategy}
-                    onChange={(e) =>
-                      handleInputChange("investmentStrategy", e.target.value)
-                    }
-                    style={styles.select}
-                  >
-                    <option value="">Select Strategy</option>
-                    <option value="flip">Fix & Flip</option>
-                    <option value="rental">Buy & Hold Rental</option>
-                    <option value="wholesale">Wholesaling</option>
-                    <option value="brrrr">BRRRR Strategy</option>
-                    <option value="commercial">Commercial Investment</option>
-                  </select>
-                </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>Financing Type</label>
-                  <select
-                    value={formData.financingType}
-                    onChange={(e) =>
-                      handleInputChange("financingType", e.target.value)
-                    }
-                    style={styles.select}
-                  >
-                    <option value="">Select Financing</option>
-                    <option value="cash">Cash Purchase</option>
-                    <option value="conventional">Conventional Loan</option>
-                    <option value="hard-money">Hard Money Loan</option>
-                    <option value="portfolio">Portfolio Lender</option>
-                    <option value="seller-financing">Seller Financing</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Step 3: Review & Submit */}
           {currentStep === 3 && (
@@ -1717,29 +1436,6 @@ const SellerBuyerForms = () => {
                           <strong>Timeline:</strong> {formData.timeline}
                         </p>
                       )}
-                    </div>
-                  </>
-                )}
-
-                {activeForm === "buyer" && (
-                  <>
-                    <h3 style={styles.reviewTitle}>Investment Preferences</h3>
-                    <div style={styles.reviewGrid}>
-                      <p style={styles.reviewItem}>
-                        <strong>Budget:</strong> {formData.budget}
-                      </p>
-                      <p style={styles.reviewItem}>
-                        <strong>Preferred Areas:</strong>{" "}
-                        {formData.preferredAreas}
-                      </p>
-                      <p style={styles.reviewItem}>
-                        <strong>Property Types:</strong>{" "}
-                        {formData.propertyTypes.join(", ")}
-                      </p>
-                      <p style={styles.reviewItem}>
-                        <strong>Investment Experience:</strong>{" "}
-                        {formData.investmentExperience}
-                      </p>
                     </div>
                   </>
                 )}
@@ -1927,4 +1623,4 @@ const SellerBuyerForms = () => {
   );
 };
 
-export default SellerBuyerForms;
+export default SellerForms;
