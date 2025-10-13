@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 function Header() {
@@ -73,9 +74,9 @@ function Header() {
           <span>in 2 days</span>
           <span>Become a Buyer</span>
         </div>
-        <a href="/buy" className="buyer-item">
+        <Link href="/buy" className="buyer-item">
           <span>Become a Buyer</span>
-        </a>
+        </Link>
       </div>
     </div>
   );
