@@ -69,6 +69,12 @@ function Footer() {
               <li>
                 <a href="#">Real-Time Trading</a>
               </li>
+              <li>
+                <a href="/sell">Sell Your House</a>
+              </li>
+              <li>
+                <a href="/buy">Become a Buyer</a>
+              </li>
             </ul>
           </div>
 
