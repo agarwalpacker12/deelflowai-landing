@@ -709,8 +709,11 @@ const BuyerForms = () => {
         <div style={styles.heroSection}>
           <div style={styles.heroContent}>
             <h1 style={styles.heroTitle}>
-              Get Your Property <span style={styles.highlight}>Evaluated</span>{" "}
-              Today
+              {/* Get Your Property <span style={styles.highlight}>Evaluated</span>{" "}
+              Today */}
+              Join our Expanding List of Buyers and Receive the{" "}
+              <span style={styles.highlight}> Best Value</span> in the Next
+              Purchase
             </h1>
             <p style={styles.heroDescription}>
               Whether you're looking to sell quickly or find your next
