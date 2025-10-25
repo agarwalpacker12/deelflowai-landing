@@ -345,6 +345,13 @@ function Pricing() {
   //   }
   // };
 
+  const parseFeatures = (description) => {
+    if (!description) return [];
+    // Split by capital letters followed by lowercase (camelCase splits)
+    const features = description.split(/(?=[A-Z])/);
+    return features.map((f) => f.trim());
+  };
+
   const handlePayment = async (price_id) => {
     try {
       const response = await PaymentAPI.createCheckout({
@@ -398,68 +405,81 @@ function Pricing() {
 
         <div className="pricing-grid">
           {subscriptionPackState.length > 0 ? (
-            subscriptionPackState.map((pack, index) => (
-              <div
-                key={pack.id}
-                className={`pricing-card ${
-                  index === 0 ? "" : index === 1 ? "pricing-card-popular" : ""
-                }`}
-              >
-                {index === 1 && (
-                  <div className="pricing-badge">MOST POPULAR</div>
-                )}
+            subscriptionPackState.map((pack, index) => {
+              const isProfessional = pack.name === "Professional";
+              const isEnterprise = pack.name === "Enterprise";
 
-                <div className="pricing-header">
-                  <h3 className="pricing-title">{pack.name}</h3>
-                  <div className="pricing-original">
-                    ${(pack.amount + 500).toFixed(2)}
-                  </div>
-                  <div className="pricing-price">
-                    <span className="pricing-currency">$</span>
-                    <span className="pricing-amount">
-                      {pack.amount.toFixed(2)}
-                    </span>
-                    <span className="pricing-period">per {pack.interval}</span>
-                  </div>
-                </div>
+              return (
+                <div
+                  key={pack.id}
+                  className={`pricing-card ${
+                    isProfessional ? "pricing-card-popular" : ""
+                  }`}
+                >
+                  {isProfessional && (
+                    <div className="pricing-badge">MOST POPULAR</div>
+                  )}
 
-                <ul className="pricing-features">
-                  {pack.description
-                    ?.split("\n")
-                    .filter((f) => f.trim())
-                    .map((feature, idx) => (
+                  <div className="pricing-header">
+                    <h3 className="pricing-title">{pack.name}</h3>
+                    <div className="pricing-original">
+                      ${Math.ceil(pack.amount * 1.5).toLocaleString()}
+                    </div>
+                    <div className="pricing-price">
+                      <span className="pricing-currency">$</span>
+                      <span className="pricing-amount">
+                        {pack.amount.toLocaleString()}
+                      </span>
+                      <span className="pricing-period">
+                        per {pack.interval}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* <ul className="pricing-features">
+                    {parseFeatures(pack.description).map((feature, idx) => (
                       <li key={idx} className="pricing-feature">
-                        <i
-                          data-lucide="check-circle"
-                          className="pricing-check"
-                        ></i>
-                        <span>{feature.trim()}</span>
+                        <span>{feature}</span>
                       </li>
                     ))}
-                </ul>
+                  </ul> */}
 
-                <button
-                  className={`pricing-button ${
-                    index === 0
-                      ? "pricing-button-starter"
-                      : index === 1
-                      ? "pricing-button-popular"
-                      : "pricing-button-enterprise"
-                  }`}
-                  onClick={() => handlePayment(pack.price_id)}
-                >
-                  Start Free Trial
-                </button>
+                  <p className="pricing-features">{pack.description}</p>
 
-                {index === 1 && (
-                  <div className="pricing-notice pricing-notice-popular">
-                    Only{" "}
-                    <span id="professional-spots">{professionalSpots}</span>{" "}
-                    spots left at this price!
+                  <button
+                    className={`pricing-button ${
+                      pack.name === "Starter"
+                        ? "pricing-button-starter"
+                        : isProfessional
+                        ? "pricing-button-popular"
+                        : "pricing-button-enterprise"
+                    }`}
+                    onClick={() =>
+                      isEnterprise ? null : handlePayment(pack.price_id)
+                    }
+                  >
+                    {isEnterprise ? "Contact Sales" : "Start Free Trial"}
+                  </button>
+
+                  <div
+                    className={`pricing-notice ${
+                      isProfessional ? "pricing-notice-popular" : ""
+                    }`}
+                  >
+                    {pack.name === "Starter" &&
+                      "Price increases to $597 tomorrow"}
+                    {isProfessional && (
+                      <>
+                        Only{" "}
+                        <span id="professional-spots">{professionalSpots}</span>{" "}
+                        spots left at this price!
+                      </>
+                    )}
+                    {isEnterprise && "🎁 Exclusive - invitation only"}
                   </div>
-                )}
-              </div>
-            ))
+                </div>
+              );
+            })
           ) : (
             <p>Loading plans...</p>
           )}

@@ -899,7 +899,7 @@ body {
 
 .pricing-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .pricing-title {
@@ -943,16 +943,18 @@ body {
 }
 
 .pricing-features {
-    list-style: none;
-    margin-bottom: 2rem;
-    margin-bottom: auto;
+    line-height: 50px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    
 }
 
 .pricing-feature {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-size: 0.95rem;
     color: #374151;
 }
