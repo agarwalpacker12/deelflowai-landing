@@ -334,24 +334,6 @@ function Pricing() {
     fetchSubscriptionPacks();
   }, []);
 
-  // const handlePayment = async (price_id) => {
-  //   try {
-  //     const response = await PaymentAPI.createCheckout({ price_id });
-  //     if (response.data.data.redirect_url) {
-  //       window.location.href = response.data.data.redirect_url;
-  //     }
-  //   } catch (err) {
-  //     console.error("Error initiating payment:", err);
-  //   }
-  // };
-
-  const parseFeatures = (description) => {
-    if (!description) return [];
-    // Split by capital letters followed by lowercase (camelCase splits)
-    const features = description.split(/(?=[A-Z])/);
-    return features.map((f) => f.trim());
-  };
-
   const handlePayment = async (price_id) => {
     try {
       const response = await PaymentAPI.createCheckout({
@@ -436,14 +418,6 @@ function Pricing() {
                     </div>
                   </div>
 
-                  {/* <ul className="pricing-features">
-                    {parseFeatures(pack.description).map((feature, idx) => (
-                      <li key={idx} className="pricing-feature">
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul> */}
-
                   <p className="pricing-features">{pack.description}</p>
 
                   <button
@@ -481,7 +455,96 @@ function Pricing() {
               );
             })
           ) : (
-            <p>Loading plans...</p>
+            <>
+              {/* Dummy Starter Plan */}
+              <div className="pricing-card">
+                <div className="pricing-header">
+                  <h3 className="pricing-title">Starter</h3>
+                  <div className="pricing-original">$997</div>
+                  <div className="pricing-price">
+                    <span className="pricing-currency">$</span>
+                    <span className="pricing-amount">297</span>
+                    <span className="pricing-period">per month</span>
+                  </div>
+                </div>
+
+                <p className="pricing-features">
+                  50 AI Lead Analyses/month
+                  <br />
+                  Basic blockchain escrow
+                  <br />
+                  Email & SMS automation
+                </p>
+                <button
+                  className="pricing-button pricing-button-starter"
+                  disabled
+                >
+                  Start Free Trial
+                </button>
+                <div className="pricing-notice">Loading pricing...</div>
+              </div>
+
+              {/* Dummy Professional Plan */}
+              <div className="pricing-card pricing-card-popular">
+                <div className="pricing-badge">MOST POPULAR</div>
+                <div className="pricing-header">
+                  <h3 className="pricing-title">Professional</h3>
+                  <div className="pricing-original">$2,997</div>
+                  <div className="pricing-price">
+                    <span className="pricing-currency">$</span>
+                    <span className="pricing-amount">797</span>
+                    <span className="pricing-period">per month</span>
+                  </div>
+                </div>
+
+                <p className="pricing-features">
+                  Unlimited AI analyses
+                  <br />
+                  Advanced blockchain features
+                  <br />
+                  Voice AI agents
+                </p>
+
+                <button
+                  className="pricing-button pricing-button-popular"
+                  disabled
+                >
+                  Start Free Trial
+                </button>
+                <div className="pricing-notice pricing-notice-popular">
+                  Loading pricing...
+                </div>
+              </div>
+
+              {/* Dummy Enterprise Plan */}
+              <div className="pricing-card">
+                <div className="pricing-header">
+                  <h3 className="pricing-title">Enterprise</h3>
+                  <div className="pricing-original">$4,997</div>
+                  <div className="pricing-price">
+                    <span className="pricing-currency">$</span>
+                    <span className="pricing-amount">1,997</span>
+                    <span className="pricing-period">per month</span>
+                  </div>
+                </div>
+
+                <p className="pricing-features">
+                  Everything in Professional
+                  <br />
+                  Custom AI model training
+                  <br />
+                  Dedicated success manager
+                </p>
+
+                <button
+                  className="pricing-button pricing-button-enterprise"
+                  disabled
+                >
+                  Contact Sales
+                </button>
+                <div className="pricing-notice">Loading pricing...</div>
+              </div>
+            </>
           )}
         </div>
       </div>
