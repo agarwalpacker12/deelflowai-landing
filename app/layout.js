@@ -3,6 +3,7 @@ import Navbar from "./component/hero/Navbar";
 import "./style.css";
 import Header from "./component/hero/Header";
 import Footer from "./component/Footer";
+import ReduxProvider from "./providers/ReduxProvider";
 
 export const metadata = {
   title:
@@ -14,10 +15,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Header />
-        <Navbar />
-        {children}
-        <Footer />
+        <ReduxProvider>
+          <Header />
+          <Navbar />
+          {children}
+          <Footer />
+        </ReduxProvider>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
       </body>
     </html>

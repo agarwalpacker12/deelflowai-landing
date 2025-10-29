@@ -9,10 +9,12 @@ import Feature from "./component/hero/Feature";
 import BlockChain from "./component/hero/BlockChain";
 import Pricing from "./component/hero/Pricing";
 import Testimonial from "./component/hero/Testimonial";
+import Link from "next/link";
 
 export default function Home() {
   const [showExitPopupState, setShowExitPopupState] = useState(false);
   const [exitTimer, setExitTimer] = useState(600); // 10 minutes
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
 
   const activities = [
     {
@@ -72,6 +74,24 @@ export default function Home() {
       bgColor: "#ec4899",
     },
   ];
+
+  // Function to check user verification status
+  const checkUserAuth = () => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.is_verified === false || !user.id) {
+          return false;
+        }
+        return true;
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        return false;
+      }
+    }
+    return false;
+  };
 
   useEffect(() => {
     // Smooth scrolling for anchor links
@@ -259,6 +279,20 @@ export default function Home() {
   const seconds = exitTimer % 60;
   const timerString = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
+  const closeAuthPopup = () => {
+    setShowAuthPopup(false);
+  };
+
+  const handleSignUp = () => {
+    // Redirect to signup page or handle signup logic
+    window.location.href = "/signup";
+  };
+
+  const handleSignIn = () => {
+    // Redirect to signin page or handle signin logic
+    window.location.href = "/signin";
+  };
+
   return (
     <>
       {/* Scarcity Banner */}
@@ -334,7 +368,10 @@ export default function Home() {
       <BlockChain />
 
       {/* NEW PRICING SECTION */}
-      <Pricing />
+      <Pricing
+        onAuthRequired={() => setShowAuthPopup(true)}
+        checkUserAuth={checkUserAuth}
+      />
 
       {/* Testimonials Section */}
       <Testimonial />
@@ -463,6 +500,52 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Auth Popup - Sign Up / Sign In */}
+      {showAuthPopup && (
+        <div className="exit-popup show">
+          <div className="exit-popup-content">
+            <button className="exit-popup-close" onClick={closeAuthPopup}>
+              &times;
+            </button>
+
+            <div className="text-center">
+              <h3>🔐 Account Verification Required</h3>
+              <p>
+                Please sign up or sign in to access all features and start your
+                journey with DeelFlowAI.
+              </p>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                  marginTop: "2rem",
+                }}
+              >
+                <Link href={"/login"}>
+                  <button
+                    className="exit-popup-button"
+                    style={{ background: "#10b981" }}
+                  >
+                    Sign In
+                  </button>
+                </Link>
+                {/* <Link href={"/login"}> */}
+                <button
+                  className="exit-popup-button"
+                  onClick={handleSignUp}
+                  style={{ background: "#3b82f6" }}
+                >
+                  Sign Up
+                </button>
+                {/* </Link> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* <DealflowScript /> */}
     </>

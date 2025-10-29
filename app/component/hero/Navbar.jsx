@@ -129,7 +129,7 @@ function Navbar() {
           </nav>
 
           {/* Desktop CTA */}
-          <div
+          {/* <div
             className="flex items-center desktop-cta"
             style={{ gap: "1rem" }}
           >
@@ -165,7 +165,42 @@ function Navbar() {
             >
               Sign in
             </a>
-          </div>
+          </div> */}
+          <Link href={"/login"}>
+            <button
+              className="gradient-button"
+              style={{
+                color: "white",
+                padding: "0.5rem 1.5rem",
+                borderRadius: "9999px",
+                fontWeight: 600,
+                border: "none",
+                cursor: "pointer",
+                textDecoration: "none",
+              }}
+            >
+              sign in
+            </button>
+          </Link>
+
+          <button
+            className="gradient-button"
+            style={{
+              color: "white",
+              padding: "0.5rem 1.5rem",
+              borderRadius: "9999px",
+              fontWeight: 600,
+              border: "none",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+            }}
+          >
+            sign out
+          </button>
 
           {/* Mobile Header Right (Buttons + Menu) */}
           <div className="mobile-header-right">
