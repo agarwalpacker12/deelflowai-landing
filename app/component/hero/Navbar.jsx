@@ -10,6 +10,11 @@ function Navbar() {
   const [activeUsers, setActiveUsers] = useState(3847);
   const [dailyDeals, setDailyDeals] = useState(127);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -165,7 +170,8 @@ function Navbar() {
               Sign in
             </a>
           </div> */}
-          <Link href={"/login"}>
+
+          {localStorage.getItem("token") ? (
             <button
               className="gradient-button"
               style={{
@@ -177,30 +183,32 @@ function Navbar() {
                 cursor: "pointer",
                 textDecoration: "none",
               }}
+              onClick={() => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.location.reload(); // 🔥 Hard reloads the entire page
+              }}
             >
-              sign in
+              sign out
             </button>
-          </Link>
-
-          <button
-            className="gradient-button"
-            style={{
-              color: "white",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "9999px",
-              fontWeight: 600,
-              border: "none",
-              cursor: "pointer",
-              textDecoration: "none",
-            }}
-            onClick={() => {
-              localStorage.removeItem("token");
-              localStorage.removeItem("user");
-              window.location.reload(); // 🔥 Hard reloads the entire page
-            }}
-          >
-            sign out
-          </button>
+          ) : (
+            <Link href={"/login"}>
+              <button
+                className="gradient-button"
+                style={{
+                  color: "white",
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "9999px",
+                  fontWeight: 600,
+                  border: "none",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+              >
+                sign in
+              </button>
+            </Link>
+          )}
 
           {/* Mobile Header Right (Buttons + Menu) */}
           <div className="mobile-header-right">
@@ -328,12 +336,12 @@ function Navbar() {
                   className="animate-pulse"
                 ></div>
                 <span id="mobile-active-users">
-                  {activeUsers.toLocaleString()}
+                  {mounted ? activeUsers.toLocaleString() : '3,847'}
                 </span>
                 <span>active</span>
               </span>
               <span>
-                <span id="mobile-daily-deals">{dailyDeals}</span> deals today
+                <span id="mobile-daily-deals">{mounted ? dailyDeals : '127'}</span> deals today
               </span>
             </div>
           </div>
