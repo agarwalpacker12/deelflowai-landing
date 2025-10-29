@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -197,6 +196,7 @@ function Navbar() {
             onClick={() => {
               localStorage.removeItem("token");
               localStorage.removeItem("user");
+              window.location.reload(); // 🔥 Hard reloads the entire page
             }}
           >
             sign out
