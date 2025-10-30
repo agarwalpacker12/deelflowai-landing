@@ -3,8 +3,6 @@ import { PaymentAPI } from "../../services/api";
 import React, { useEffect, useState } from "react";
 
 function Pricing({ onAuthRequired, checkUserAuth }) {
-  console.log("onAuthRequired", onAuthRequired);
-
   const [countdownTime, setCountdownTime] = useState(4 * 3600 + 23 * 60 + 17);
   const [professionalSpots, setProfessionalSpots] = useState(15);
   const [subscriptionPackState, setSubscriptionPackState] = useState([]);
@@ -24,35 +22,12 @@ function Pricing({ onAuthRequired, checkUserAuth }) {
     fetchSubscriptionPacks();
   }, []);
 
-  // const handlePayment = async (price_id) => {
-  //   // Check user authentication before proceeding
-  //   // if (checkUserAuth && !checkUserAuth()) {
-  //   //   debugger;
-  //   //   onAuthRequired && onAuthRequired();
-  //   //   return;
-  //   // }
-
-  //   try {
-  //     const response = await PaymentAPI.createCheckout({
-  //       price_id,
-  //     });
-  //     alert("ok?");
-  //     return true;
-  //     if (response?.data?.data?.url) {
-  //       window.location.href = response?.data?.data?.url;
-  //     }
-  //   } catch (err) {
-  //     console.error("Error initiating payment:", err);
-  //   }
-  // };
-
   const handlePayment = async (price_id) => {
     try {
       // Check user authentication before proceeding
       const userData = localStorage.getItem("user");
 
       if (!userData) {
-        alert("here");
         // If user not logged in, show auth modal / popup
         if (onAuthRequired) onAuthRequired();
         return;
@@ -159,8 +134,9 @@ function Pricing({ onAuthRequired, checkUserAuth }) {
                         ? "pricing-button-popular"
                         : "pricing-button-enterprise"
                     }`}
-                    onClick={() =>
-                      isEnterprise ? null : handlePayment(pack.price_id)
+                    onClick={
+                      () => handlePayment(pack.price_id)
+                      // isEnterprise ? null : handlePayment(pack.price_id)
                     }
                   >
                     {isEnterprise ? "Contact Sales" : "Start Free Trial"}
