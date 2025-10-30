@@ -283,16 +283,6 @@ export default function Home() {
     setShowAuthPopup(false);
   };
 
-  const handleSignUp = () => {
-    // Redirect to signup page or handle signup logic
-    window.location.href = "/signup";
-  };
-
-  const handleSignIn = () => {
-    // Redirect to signin page or handle signin logic
-    window.location.href = "/signin";
-  };
-
   return (
     <>
       {/* Scarcity Banner */}
@@ -532,15 +522,14 @@ export default function Home() {
                     Sign In
                   </button>
                 </Link>
-                {/* <Link href={"/login"}> */}
-                <button
-                  className="exit-popup-button"
-                  onClick={handleSignUp}
-                  style={{ background: "#3b82f6" }}
-                >
-                  Sign Up
-                </button>
-                {/* </Link> */}
+                <Link href={"/register"}>
+                  <button
+                    className="exit-popup-button"
+                    style={{ background: "#3b82f6" }}
+                  >
+                    Sign Up
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

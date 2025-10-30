@@ -468,20 +468,6 @@ const RegisterPage = () => {
                       </Link>
                     </p>
                   </form>
-
-                  {/* Sign In Link */}
-                  {/* <p
-                    className="text-center text-gray-600"
-                    style={{ padding: "0.75rem 1rem", marginTop: "1rem" }}
-                  >
-                    Already have an account?{" "}
-                    <Link
-                      href="/login"
-                      className="text-blue-600 hover:text-blue-700 font-semibold"
-                    >
-                      Sign in
-                    </Link>
-                  </p> */}
                 </div>
               </div>
             </div>
