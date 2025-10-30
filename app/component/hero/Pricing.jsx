@@ -1,4 +1,5 @@
 "use client";
+import { CircleCheckBig } from "lucide-react";
 import { PaymentAPI } from "../../services/api";
 import React, { useEffect, useState } from "react";
 
@@ -124,7 +125,133 @@ function Pricing({ onAuthRequired, checkUserAuth }) {
                     </div>
                   </div>
 
-                  <p className="pricing-features">{pack.description}</p>
+                  {/* <p className="pricing-features">{pack.description}</p> */}
+                  <ul className="pricing-features space-y-2 mt-4 text-left">
+                    {pack.name === "Starter" && (
+                      <>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold pricingBold">
+                            50
+                          </span>{" "}
+                          AI Lead Analyses/Month
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold pricingBold">
+                            Basic
+                          </span>{" "}
+                          Blockchain Escrow
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Email</span> & SMS
+                          Automation
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Standard</span>{" "}
+                          Reporting
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Mobile</span> App
+                          Access
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Email</span> Support
+                        </li>
+                      </>
+                    )}
+
+                    {pack.name === "Professional" && (
+                      <>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Unlimited</span> AI
+                          Analyses
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Advanced</span>{" "}
+                          Blockchain
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Voice</span> AI Agents
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">
+                            Transactional
+                          </span>{" "}
+                          Funding Access
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Custom</span>{" "}
+                          Marketing Funnels
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Priority</span>{" "}
+                          Support
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">
+                            White-Label
+                          </span>{" "}
+                          Options
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">API</span> Access
+                        </li>
+                      </>
+                    )}
+
+                    {pack.name === "Enterprise" && (
+                      <>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Everything</span> in
+                          Professional
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Custom</span> AI Model
+                          Training
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Dedicated</span>{" "}
+                          Success Manager
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Custom</span>{" "}
+                          Integrations
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Advanced</span>{" "}
+                          Analytics
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">Team</span>{" "}
+                          Collaboration
+                        </li>
+                        <li className="flex items-start gap-2 pricing-feature">
+                          <CircleCheckBig color="green" size={20} />
+                          <span className="font-semibold">99.9%</span> SLA
+                          Guarantee
+                        </li>
+                      </>
+                    )}
+                  </ul>
 
                   <button
                     className={`pricing-button ${
@@ -175,13 +302,32 @@ function Pricing({ onAuthRequired, checkUserAuth }) {
                   </div>
                 </div>
 
-                <p className="pricing-features">
-                  50 AI Lead Analyses/month
-                  <br />
-                  Basic blockchain escrow
-                  <br />
-                  Email & SMS automation
-                </p>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold pricingBold">50</span> AI Lead
+                  Analyses/Month
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold pricingBold">Basic</span>{" "}
+                  Blockchain Escrow
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Email</span> & SMS Automation
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Standard</span> Reporting
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Mobile</span> App Access
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Email</span> Support
+                </li>
                 <button
                   className="pricing-button pricing-button-starter"
                   // disabled
@@ -205,13 +351,40 @@ function Pricing({ onAuthRequired, checkUserAuth }) {
                   </div>
                 </div>
 
-                <p className="pricing-features">
-                  Unlimited AI analyses
-                  <br />
-                  Advanced blockchain features
-                  <br />
-                  Voice AI agents
-                </p>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Unlimited</span> AI Analyses
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Advanced</span> Blockchain
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Voice</span> AI Agents
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Transactional</span> Funding
+                  Access
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Custom</span> Marketing
+                  Funnels
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Priority</span> Support
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">White-Label</span> Options
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">API</span> Access
+                </li>
 
                 <button
                   className="pricing-button pricing-button-popular"
@@ -237,13 +410,37 @@ function Pricing({ onAuthRequired, checkUserAuth }) {
                   </div>
                 </div>
 
-                <p className="pricing-features">
-                  Everything in Professional
-                  <br />
-                  Custom AI model training
-                  <br />
-                  Dedicated success manager
-                </p>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Everything</span> in
+                  Professional
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Custom</span> AI Model
+                  Training
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Dedicated</span> Success
+                  Manager
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Custom</span> Integrations
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Advanced</span> Analytics
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">Team</span> Collaboration
+                </li>
+                <li className="flex items-start gap-2 pricing-feature">
+                  <CircleCheckBig color="green" size={20} />
+                  <span className="font-semibold">99.9%</span> SLA Guarantee
+                </li>
 
                 <button
                   className="pricing-button pricing-button-enterprise"
