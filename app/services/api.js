@@ -21,7 +21,18 @@ const AllPOSTHeader = axios.create({
   baseURL: BASE_URL, // Use base URL without /api prefix
   // withCredentials: true,
   // credentials: "include", // 👈 REQUIRED for session cookies
-  method: "POST",
+  // method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "X-Requested-With": "XMLHttpRequest",
+  },
+});
+
+const apiWithoutBaseOnUrl = axios.create({
+  baseURL: BASE_URL, // Use base URL without /api prefix
+  withCredentials: true,
+  credentials: "include", // 👈 REQUIRED for session cookies
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -35,6 +46,7 @@ const AllPOSTHeader = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -45,6 +57,36 @@ api.interceptors.request.use(
 
 // Response interceptor to handle authentication errors
 api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // if (error.response?.status === 401) {
+    //   // Clear stored auth data
+    //   localStorage.removeItem("token");
+    //   localStorage.removeItem("user");
+
+    //   // Redirect to login page
+    //   if (window.location.pathname !== "/login") {
+    //     window.location.href = "/login";
+    //   }
+    // }
+    return Promise.reject(error);
+  }
+);
+
+// Request interceptor to add JWT token
+AllPOSTHeader.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Response interceptor to handle authentication errors
+AllPOSTHeader.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
