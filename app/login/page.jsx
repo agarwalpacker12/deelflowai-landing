@@ -333,7 +333,10 @@ const LoginPage = () => {
 
                     {/* Error Message */}
                     {error && (
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                      <div
+                        className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2"
+                        style={{ marginTop: "10px" }}
+                      >
                         <span className="text-red-500 mt-0.5">⚠</span>
                         <p className="text-red-700 text-sm">{error}</p>
                       </div>

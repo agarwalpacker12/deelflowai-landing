@@ -11,9 +11,11 @@ function Navbar() {
   const [dailyDeals, setDailyDeals] = useState(127);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    setIsLoggedIn(!!localStorage.getItem("token"));
   }, []);
 
   useEffect(() => {
@@ -171,28 +173,7 @@ function Navbar() {
             </a>
           </div> */}
 
-          {/* {localStorage.getItem("token") ? ( */}
-          <button
-            className="gradient-button"
-            style={{
-              color: "white",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "9999px",
-              fontWeight: 600,
-              border: "none",
-              cursor: "pointer",
-              textDecoration: "none",
-            }}
-            onClick={() => {
-              localStorage.removeItem("token");
-              localStorage.removeItem("user");
-              window.location.reload(); // 🔥 Hard reloads the entire page
-            }}
-          >
-            sign out
-          </button>
-          {/* ) : ( */}
-          <Link href={"/login"}>
+          {isLoggedIn ? (
             <button
               className="gradient-button"
               style={{
@@ -204,28 +185,53 @@ function Navbar() {
                 cursor: "pointer",
                 textDecoration: "none",
               }}
+              onClick={() => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.location.reload();
+              }}
             >
-              sign in
+              Sign out
             </button>
-          </Link>
-          {/* )} */}
+          ) : (
+            <Link href={"/login"}>
+              <button
+                className="gradient-button"
+                style={{
+                  color: "white",
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "9999px",
+                  fontWeight: 600,
+                  border: "none",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+              >
+                Sign in
+              </button>
+            </Link>
+          )}
 
           {/* Mobile Header Right (Buttons + Menu) */}
           <div className="mobile-header-right">
             {/* Mobile CTA Buttons (visible on tablet/medium screens) */}
             <div className="mobile-cta-buttons">
-              <a
-                href="https://apps.deelflowai.com/register"
-                className="mobile-btn-signup"
-              >
-                Sign up
-              </a>
-              <a
-                href="https://apps.deelflowai.com/login"
-                className="mobile-btn-signin"
-              >
-                Sign in
-              </a>
+              {isLoggedIn ? (
+                <button
+                  className="mobile-btn-signin"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    window.location.reload();
+                  }}
+                >
+                  Sign out
+                </button>
+              ) : (
+                <Link href="/login" className="mobile-btn-signin">
+                  Sign in
+                </Link>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -282,45 +288,49 @@ function Navbar() {
           {/* Mobile Menu CTA */}
           <div className="mobile-menu-cta">
             <div className="mobile-menu-buttons">
-              <a
-                href="https://apps.deelflowai.com/register"
-                style={{
-                  color: "#6b7280",
-                  fontWeight: 500,
-                  background: "none",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                  borderColor: "#d1d5db",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                  padding: "0.75rem 1.5rem",
-                  borderRadius: "0.375rem",
-                  transition: "all 0.3s ease",
-                  textAlign: "center",
-                  display: "block",
-                  flex: 1,
-                }}
-              >
-                Sign up
-              </a>
-              <a
-                href="https://apps.deelflowai.com/login"
-                className="gradient-button"
-                style={{
-                  color: "white",
-                  padding: "0.75rem 1.5rem",
-                  borderRadius: "9999px",
-                  fontWeight: 600,
-                  border: "none",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                  textAlign: "center",
-                  display: "block",
-                  flex: 1,
-                }}
-              >
-                Sign in
-              </a>
+              {isLoggedIn ? (
+                <button
+                  className="gradient-button"
+                  style={{
+                    color: "white",
+                    padding: "0.75rem 1.5rem",
+                    borderRadius: "9999px",
+                    fontWeight: 600,
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    textAlign: "center",
+                    display: "block",
+                    flex: 1,
+                  }}
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    window.location.reload();
+                  }}
+                >
+                  Sign out
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  className="gradient-button"
+                  style={{
+                    color: "white",
+                    padding: "0.75rem 1.5rem",
+                    borderRadius: "9999px",
+                    fontWeight: 600,
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    textAlign: "center",
+                    display: "block",
+                    flex: 1,
+                  }}
+                >
+                  Sign in
+                </Link>
+              )}
             </div>
 
             {/* Mobile Social Proof */}
