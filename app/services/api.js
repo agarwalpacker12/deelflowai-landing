@@ -29,19 +29,6 @@ const AllPOSTHeader = axios.create({
   },
 });
 
-const apiWithoutBaseOnUrl = axios.create({
-  baseURL: BASE_URL, // Use base URL without /api prefix
-  withCredentials: true,
-  credentials: "include", // 👈 REQUIRED for session cookies
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    "X-Requested-With": "XMLHttpRequest",
-  },
-});
-
-// No CSRF token needed for JWT authentication
-
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   (config) => {
