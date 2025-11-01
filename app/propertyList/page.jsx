@@ -83,27 +83,30 @@ const PropertyList = () => {
     };
 
     fetchProperties();
-  }, [pagination.page, pagination.limit]); // Re-fetch when pagination changes
-
-  // Debounced search effect
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (searchQuery !== "") {
-        setPagination((prev) => ({ ...prev, page: 1 })); // Reset to first page on search
-      }
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery, filters]);
+  }, [pagination.page, pagination.limit, filters, searchQuery]); // Re-fetch when pagination, filters, or search changes
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
     }));
+    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to first page on filter change
   };
 
   const handleSearch = () => {
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      type: "All Type",
+      minPrice: "",
+      maxPrice: "",
+      beds: "Beds",
+      baths: "Baths",
+      location: "All Zone 50+",
+    });
+    setSearchQuery("");
     setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
@@ -214,7 +217,9 @@ const PropertyList = () => {
         <div className={styles.filtersContainer}>
           <div className={styles.filterGroup}>
             <span className={styles.filterLabel}>🔧 Smart Filters</span>
-            <button className={styles.clearAll}>Clear All</button>
+            <button className={styles.clearAll} onClick={handleClearFilters}>
+              Clear All
+            </button>
           </div>
 
           <div className={styles.filters}>
