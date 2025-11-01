@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
 
 export default function ProfilePage() {
@@ -115,12 +116,14 @@ export default function ProfilePage() {
             <button className="rounded-full border border-solid border-indigo-600 bg-indigo-600 py-3 px-4 text-sm font-semibold text-white whitespace-nowrap shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:bg-indigo-700 hover:border-indigo-700">
               Book a Session
             </button> */}
-            <button
-              className="rounded-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 py-3 px-6 text-sm font-bold whitespace-nowrap shadow-lg transition-all duration-500 hover:shadow-xl hover:scale-105 animate-pulse"
-              style={{ color: "#ffffff", padding: 2, paddingRight: 5 }}
-            >
-              ⭐ Upgrade Your Profile
-            </button>
+            <Link href="/pricing">
+              <button
+                className="rounded-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 py-3 px-6 text-sm font-bold whitespace-nowrap shadow-lg transition-all duration-500 hover:shadow-xl hover:scale-105 animate-pulse"
+                style={{ color: "#ffffff", padding: 2, paddingRight: 5 }}
+              >
+                ⭐ Upgrade Your Profile
+              </button>
+            </Link>
           </div>
         </div>
         <h3 className="text-center font-manrope font-bold text-3xl leading-10 text-gray-900 mb-3">

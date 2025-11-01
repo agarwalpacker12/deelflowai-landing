@@ -65,6 +65,7 @@ const LoginPage = () => {
 
       if (login.fulfilled.match(resultAction)) {
         setOrgLoading(true);
+        router.push("/profile");
       }
     } catch (error) {
       console.error("Login failed:", error);
