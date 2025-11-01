@@ -353,12 +353,12 @@ const LoginPage = () => {
                       {loading || orgLoading ? (
                         <>
                           <LoadingSpinner />
-                          <span>
+                          <span className="text-white">
                             {loading ? "Signing in..." : "Loading..."}
                           </span>
                         </>
                       ) : (
-                        <span>Sign in</span>
+                        <span className="text-white">Sign in</span>
                       )}
                     </button>
                   </form>

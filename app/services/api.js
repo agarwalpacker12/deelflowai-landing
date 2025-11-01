@@ -112,4 +112,16 @@ export const PaymentAPI = {
   getCurrentPack: () => AllPOSTHeader.get(`/current-subscription/`),
 };
 
+export const propertiesAPI = {
+  getProperties: (params) => api.get("/properties/", { params }),
+  getProperty: (id) => api.get(`/properties/${id}/`),
+  createProperty: (data) => api.post("/properties/", data),
+  updateProperty: (id, data) => api.put(`/properties/${id}/`, data),
+  deleteProperty: (id) => api.delete(`/properties/${id}/`),
+  getAIAnalysis: (id) => api.get(`/properties/${id}/ai-analysis/`),
+
+  getCombinedProperties: (params) =>
+    api.get("/properties/combined", { params }),
+};
+
 export default api;
