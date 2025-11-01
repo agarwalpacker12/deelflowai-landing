@@ -475,7 +475,7 @@ const PropertyList = () => {
       )}
 
       {/* Property Details Modal */}
-      {showModal && selectedProperty && (
+      {/* {showModal && selectedProperty && (
         <div className={styles.modalOverlay} onClick={handleCloseModal}>
           <div
             className={styles.modalContent}
@@ -729,6 +729,385 @@ const PropertyList = () => {
                   <button className={styles.modalFavoriteBtn}>
                     ♡ Save Property
                   </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )} */}
+
+      {showModal && selectedProperty && (
+        <div className={styles.modalOverlay} onClick={handleCloseModal}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className={styles.closeBtn} onClick={handleCloseModal}>
+              ×
+            </button>
+
+            <div className={styles.modalBody}>
+              {/* Left Column - Media Section */}
+              <div className={styles.modalMediaSection}>
+                <div className={styles.mediaContainer}>
+                  <div className={styles.mediaHeader}>
+                    <div className={styles.mediaNav}>
+                      <button
+                        className={`${styles.mediaTab} ${
+                          !showMap ? styles.activeMediaTab : ""
+                        }`}
+                        onClick={() => setShowMap(false)}
+                      >
+                        <span className={styles.tabIcon}>📸</span>
+                        <span>Photos</span>
+                        <span className={styles.tabBadge}>12</span>
+                      </button>
+                      <button
+                        className={`${styles.mediaTab} ${
+                          showMap ? styles.activeMediaTab : ""
+                        }`}
+                        onClick={() => setShowMap(true)}
+                      >
+                        <span className={styles.tabIcon}>🗺️</span>
+                        <span>Map View</span>
+                      </button>
+                    </div>
+                    <div className={styles.viewToggle360}>
+                      <button className={styles.view360Btn}>
+                        <span>🔄</span> 360° Tour
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={styles.mediaContent}>
+                    {!showMap ? (
+                      <div className={styles.imageGallery}>
+                        <div className={styles.mainImage}>
+                          <img
+                            src="/api/placeholder/600/400"
+                            alt={selectedProperty.street_address}
+                            className={styles.galleryMainImage}
+                          />
+                          <div className={styles.imageOverlay}>
+                            <div className={styles.imageBadges}>
+                              {selectedProperty.tags.map((tag, index) => (
+                                <span
+                                  key={index}
+                                  className={`${styles.overlayBadge} ${
+                                    tag === "HOT DEAL"
+                                      ? styles.hotDealBadge
+                                      : tag === "Verified"
+                                      ? styles.verifiedBadge
+                                      : styles.tourBadge
+                                  }`}
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                            <div className={styles.imageActions}>
+                              <button className={styles.favoriteOverlayBtn}>
+                                ♡
+                              </button>
+                              <button className={styles.shareBtn}>📤</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.thumbnailRow}>
+                          {[1, 2, 3, 4].map((thumb, index) => (
+                            <div key={index} className={styles.thumbnail}>
+                              <img
+                                src={`/api/placeholder/120/80`}
+                                alt={`View ${thumb}`}
+                              />
+                              {index === 3 && (
+                                <div className={styles.morePhotos}>+8</div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={styles.mapContainer}>
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0, borderRadius: "12px" }}
+                          loading="lazy"
+                          allowFullScreen
+                          referrerPolicy="no-referrer-when-downgrade"
+                          src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(
+                            `${selectedProperty.street_address}, ${selectedProperty.city}, ${selectedProperty.state} ${selectedProperty.zip_code}`
+                          )}`}
+                          title="Property Location Map"
+                        ></iframe>
+                        <div className={styles.mapOverlay}>
+                          <button className={styles.walkScoreBtn}>
+                            🚶 Walk Score: 85
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Property Information */}
+              <div className={styles.modalInfoSection}>
+                {/* Property Header */}
+                <div className={styles.propertyHeader}>
+                  <div className={styles.priceSection}>
+                    <div className={styles.mainPrice}>
+                      {formatPrice(selectedProperty.purchase_price)}
+                    </div>
+                    <div className={styles.priceSubtext}>
+                      $
+                      {Math.round(
+                        selectedProperty.purchase_price /
+                          selectedProperty.square_feet
+                      )}
+                      /sqft
+                    </div>{" "}
+                    <div className="flex ">
+                      <div className={styles.statusSection}>
+                        <div className={styles.aiScoreChip}>
+                          <span className={styles.aiIcon}>🤖</span>
+                          <div className={styles.scoreText}>
+                            <span className={styles.scoreLabel}>AI Score</span>
+                            <span className={styles.scoreValue}>
+                              {Math.floor(Math.random() * 20) + 80}/100
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div
+                            className={`${styles.statusChip} ${
+                              selectedProperty.status === "active"
+                                ? styles.statusActive
+                                : styles.statusPending
+                            }`}
+                          >
+                            {selectedProperty.status === "active"
+                              ? "✅ Available"
+                              : "⏸️ Pending"}
+                          </div>
+                        </div>
+                      </div>{" "}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Property Address */}
+                <div className={styles.addressSection}>
+                  <h2 className={styles.propertyAddress}>
+                    {selectedProperty.street_address}
+                    {selectedProperty.unit_apt &&
+                      ` ${selectedProperty.unit_apt}`}
+                  </h2>
+                  <div className={styles.locationDetails}>
+                    <span className={styles.cityState}>
+                      {selectedProperty.city}, {selectedProperty.state}{" "}
+                      {selectedProperty.zip_code}
+                    </span>
+                    {selectedProperty.county && (
+                      <span className={styles.county}>
+                        • {selectedProperty.county}
+                      </span>
+                    )}
+                  </div>
+                  <div className={styles.propertyMeta}>
+                    <span>ID: {selectedProperty.source_id}</span>
+                    <span>•</span>
+                    <span>Source: {selectedProperty.source}</span>
+                    <span>•</span>
+                    <span>
+                      Listed{" "}
+                      {Math.floor(
+                        (new Date() - new Date(selectedProperty.created_at)) /
+                          (1000 * 60 * 60 * 24)
+                      )}{" "}
+                      days ago
+                    </span>
+                  </div>
+                </div>
+
+                {/* Property Details Grid */}
+                <div className={styles.detailsGrid}>
+                  <div className={styles.detailCard}>
+                    <div className={styles.detailIcon}>🛏️</div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailValue}>
+                        {selectedProperty.bedrooms}
+                      </span>
+                      <span className={styles.detailLabel}>Bedrooms</span>
+                    </div>
+                  </div>
+                  <div className={styles.detailCard}>
+                    <div className={styles.detailIcon}>🛁</div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailValue}>
+                        {selectedProperty.bathrooms}
+                      </span>
+                      <span className={styles.detailLabel}>Bathrooms</span>
+                    </div>
+                  </div>
+                  <div className={styles.detailCard}>
+                    <div className={styles.detailIcon}>📐</div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailValue}>
+                        {formatNumber(selectedProperty.square_feet)}
+                      </span>
+                      <span className={styles.detailLabel}>Sq Ft</span>
+                    </div>
+                  </div>
+                  <div className={styles.detailCard}>
+                    <div className={styles.detailIcon}>🏠</div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailValue}>
+                        {selectedProperty.property_type?.replace("_", " ")}
+                      </span>
+                      <span className={styles.detailLabel}>Property Type</span>
+                    </div>
+                  </div>
+                  {selectedProperty.lot_size && (
+                    <div className={styles.detailCard}>
+                      <div className={styles.detailIcon}>🌿</div>
+                      <div className={styles.detailContent}>
+                        <span className={styles.detailValue}>
+                          {selectedProperty.lot_size}
+                        </span>
+                        <span className={styles.detailLabel}>Acres</span>
+                      </div>
+                    </div>
+                  )}
+                  {selectedProperty.year_built && (
+                    <div className={styles.detailCard}>
+                      <div className={styles.detailIcon}>📅</div>
+                      <div className={styles.detailContent}>
+                        <span className={styles.detailValue}>
+                          {selectedProperty.year_built}
+                        </span>
+                        <span className={styles.detailLabel}>Year Built</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Investment Metrics */}
+                <div className={styles.metricsSection}>
+                  <h3 className={styles.sectionTitle}>Investment Analysis</h3>
+                  <div className={styles.metricsGrid}>
+                    <div className={styles.metricItem}>
+                      <span className={styles.metricIcon}>💰</span>
+                      <div className={styles.metricDetails}>
+                        <span className={styles.metricLabel}>
+                          Purchase Price
+                        </span>
+                        <span className={styles.metricValue}>
+                          {formatPrice(selectedProperty.purchase_price)}
+                        </span>
+                      </div>
+                    </div>
+                    {selectedProperty.arv && (
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricIcon}>📊</span>
+                        <div className={styles.metricDetails}>
+                          <span className={styles.metricLabel}>ARV</span>
+                          <span className={styles.metricValue}>
+                            {formatPrice(selectedProperty.arv)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    <div className={styles.metricItem}>
+                      <span className={styles.metricIcon}>💎</span>
+                      <div className={styles.metricDetails}>
+                        <span className={styles.metricLabel}>
+                          Profit Potential
+                        </span>
+                        <span
+                          className={`${styles.metricValue} ${styles.profitValue}`}
+                        >
+                          $
+                          {Math.floor(
+                            selectedProperty.purchase_price * 0.15
+                          ).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={styles.metricItem}>
+                      <span className={styles.metricIcon}>⏱️</span>
+                      <div className={styles.metricDetails}>
+                        <span className={styles.metricLabel}>
+                          Est. Close Time
+                        </span>
+                        <span className={styles.metricValue}>
+                          {selectedProperty.status === "pending"
+                            ? "24-48 hours"
+                            : "3-5 days"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className={styles.actionSection}>
+                  <button className={styles.primaryAction}>
+                    <span className={styles.actionIcon}>💳</span>
+                    <div className={styles.actionText}>
+                      <span className={styles.actionTitle}>Secure Deposit</span>
+                      <span className={styles.actionSubtext}>
+                        Reserve this property
+                      </span>
+                    </div>
+                  </button>
+                  <div className={styles.secondaryActions}>
+                    <button className={styles.secondaryAction}>
+                      <span>📞</span>
+                      <span>Contact Agent</span>
+                    </button>
+                    <button className={styles.secondaryAction}>
+                      <span>💾</span>
+                      <span>Save Property</span>
+                    </button>
+                    <button className={styles.secondaryAction}>
+                      <span>📄</span>
+                      <span>Get Report</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Timeline */}
+                <div className={styles.timelineSection}>
+                  <div className={styles.timelineItem}>
+                    <span className={styles.timelineIcon}>📅</span>
+                    <div className={styles.timelineDetails}>
+                      <span className={styles.timelineLabel}>Listed</span>
+                      <span className={styles.timelineValue}>
+                        {new Date(
+                          selectedProperty.created_at
+                        ).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  <div className={styles.timelineItem}>
+                    <span className={styles.timelineIcon}>🔄</span>
+                    <div className={styles.timelineDetails}>
+                      <span className={styles.timelineLabel}>Last Updated</span>
+                      <span className={styles.timelineValue}>
+                        {new Date(
+                          selectedProperty.updated_at
+                        ).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
