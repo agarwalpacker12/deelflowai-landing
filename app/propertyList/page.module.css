@@ -570,3 +570,413 @@
     justify-content: center;
   }
 }
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  background: white;
+  border-radius: 16px;
+  /* max-width: 900px; */
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  /* background: rgba(0, 0, 0, 0.5); */
+  color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+/* .closeBtn:hover {
+  background: rgba(201, 199, 199, 0.7);
+} */
+
+.modalBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2%;
+}
+
+.modalImageSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.imageMapTabs {
+  display: flex;
+  background: #f3f4f6;
+  border-radius: 16px 0 0 0;
+  overflow: hidden;
+}
+
+.imageMapTab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.imageMapTab:hover {
+  background: #e5e7eb;
+}
+
+.activeTab {
+  background: white !important;
+  color: #4f46e5 !important;
+}
+
+.modalImage {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  background: linear-gradient(45deg, #e5e7eb, #f3f4f6);
+}
+
+.mapContainer {
+  width: 100%;
+  height: 400px;
+  background: #f3f4f6;
+  position: relative;
+}
+
+.mapContainer iframe {
+  border-radius: 0 0 0 16px;
+}
+
+.modalBadges {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.modalInfo {
+  padding: 2rem 2rem 2rem 0;
+}
+
+.modalHeader {
+  margin-bottom: 1.5rem;
+}
+
+.modalPrice {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 0.75rem 0;
+}
+
+.modalBadgeGroup {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.modalAiScore {
+  background: #ddd6fe;
+  color: #7c3aed;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.modalStatus {
+  background: #d1fae5;
+  color: #059669;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.modalAddress {
+  margin-bottom: 2rem;
+}
+
+.modalAddress h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.modalAddress p {
+  color: #6b7280;
+  margin: 0 0 0.5rem 0;
+}
+
+.propertyId {
+  font-size: 0.8rem;
+  color: #9ca3af !important;
+  font-family: monospace;
+}
+
+.modalDetails {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detailLabel {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.detailValue {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.modalDescription {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.modalDescription h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.modalDescription p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.modalMetrics {
+  margin-bottom: 1.5rem;
+}
+
+.modalMetrics h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.95rem;
+}
+
+.metricRow:last-child {
+  border-bottom: none;
+}
+
+.metricRow span:first-child {
+  color: #6b7280;
+}
+
+.metricHighlight {
+  font-weight: 700;
+  color: #10b981;
+  font-size: 1.1rem;
+}
+
+.modalTimestamps {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.timestamp {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.timestamp span:first-child {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.timestamp span:last-child {
+  color: #374151;
+  font-family: monospace;
+}
+
+.modalActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.modalDepositBtn,
+.modalContactBtn,
+.modalFavoriteBtn {
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.modalDepositBtn {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+}
+
+.modalDepositBtn:hover {
+  background: linear-gradient(135deg, #3730a3 0%, #6b21a8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.modalContactBtn {
+  background: #10b981;
+  color: white;
+}
+
+.modalContactBtn:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+.modalFavoriteBtn {
+  background: white;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.modalFavoriteBtn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .modalContent {
+    max-width: 100%;
+    max-height: 95vh;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modalBody {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .imageMapTabs {
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modalImage {
+    height: 250px;
+  }
+
+  .mapContainer {
+    height: 250px;
+  }
+
+  .mapContainer iframe {
+    border-radius: 0;
+  }
+
+  .modalInfo {
+    padding: 1.5rem;
+  }
+
+  .modalDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .modalPrice {
+    font-size: 1.5rem;
+  }
+}

@@ -26,6 +26,9 @@ const PropertyList = () => {
     has_prev: false,
   });
   const [error, setError] = useState(null);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   // Fetch properties from API
   useEffect(() => {
@@ -56,9 +59,11 @@ const PropertyList = () => {
         );
 
         const response = await propertiesAPI.getCombinedProperties(params);
+        console.log(response.data.data.properties);
 
         if (response.data.status === "success") {
           // debugger;
+
           setProperties(response.data.data.properties);
           setPagination({
             total: response.data?.data?.total,
@@ -100,6 +105,17 @@ const PropertyList = () => {
 
   const handleSearch = () => {
     setPagination((prev) => ({ ...prev, page: 1 }));
+  };
+
+  const handleViewDetails = (property) => {
+    setSelectedProperty(getPropertyDisplayData(property));
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedProperty(null);
+    setShowMap(false);
   };
 
   // Generate display properties for UI
@@ -409,7 +425,10 @@ const PropertyList = () => {
                   </div>
 
                   <div className={styles.actions}>
-                    <button className={styles.viewDetailsBtn}>
+                    <button
+                      className={styles.viewDetailsBtn}
+                      onClick={() => handleViewDetails(property)}
+                    >
                       View Details
                     </button>
                     <button className={styles.depositBtn}>💳 Deposit</button>
@@ -451,6 +470,268 @@ const PropertyList = () => {
             >
               Next →
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Property Details Modal */}
+      {showModal && selectedProperty && (
+        <div className={styles.modalOverlay} onClick={handleCloseModal}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className={styles.closeBtn} onClick={handleCloseModal}>
+              ×
+            </button>
+
+            <div className={styles.modalBody}>
+              <div className={styles.modalImageSection}>
+                <div className={styles.imageMapTabs}>
+                  <button
+                    className={`${styles.imageMapTab} ${
+                      !showMap ? styles.activeTab : ""
+                    }`}
+                    onClick={() => setShowMap(false)}
+                  >
+                    📷 Photos
+                  </button>
+                  <button
+                    className={`${styles.imageMapTab} ${
+                      showMap ? styles.activeTab : ""
+                    }`}
+                    onClick={() => setShowMap(true)}
+                  >
+                    🗺️ Map
+                  </button>
+                </div>
+
+                {!showMap ? (
+                  <>
+                    <img
+                      src="/api/placeholder/600/400"
+                      alt={selectedProperty.street_address}
+                      className={styles.modalImage}
+                    />
+                    <div className={styles.modalBadges}>
+                      {selectedProperty.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className={`${styles.badge} ${
+                            tag === "HOT DEAL"
+                              ? styles.hotDeal
+                              : tag === "Verified"
+                              ? styles.verified
+                              : styles.tour
+                          }`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className={styles.mapContainer}>
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(
+                        `${selectedProperty.street_address}, ${selectedProperty.city}, ${selectedProperty.state} ${selectedProperty.zip_code}`
+                      )}`}
+                      title="Property Location Map"
+                    ></iframe>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.modalInfo}>
+                <div className={styles.modalHeader}>
+                  <h2 className={styles.modalPrice}>
+                    {formatPrice(selectedProperty.purchase_price)}
+                  </h2>
+                  <div className={styles.modalBadgeGroup}>
+                    <span className={styles.modalAiScore}>
+                      🤖 AI Score: {Math.floor(Math.random() * 20) + 80}/100
+                    </span>
+                    <span className={styles.modalStatus}>
+                      {selectedProperty.status === "active"
+                        ? "✅ Active"
+                        : "⏸️ Inactive"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={styles.modalAddress}>
+                  <h3>
+                    {selectedProperty.street_address}
+                    {selectedProperty.unit_apt &&
+                      ` ${selectedProperty.unit_apt}`}
+                  </h3>
+                  <p>
+                    {selectedProperty.city}, {selectedProperty.state}{" "}
+                    {selectedProperty.zip_code}
+                    {selectedProperty.county && ` • ${selectedProperty.county}`}
+                  </p>
+                  <p className={styles.propertyId}>
+                    ID: {selectedProperty.id} • Source:{" "}
+                    {selectedProperty.source || "Internal"} • Attribution:{" "}
+                    {selectedProperty.attribution || "N/A"}
+                  </p>
+                </div>
+
+                <div className={styles.modalDetails}>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>🛏️ Bedrooms</span>
+                    <span className={styles.detailValue}>
+                      {selectedProperty.bedrooms}
+                    </span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>🚿 Bathrooms</span>
+                    <span className={styles.detailValue}>
+                      {selectedProperty.bathrooms}
+                    </span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>📏 Square Feet</span>
+                    <span className={styles.detailValue}>
+                      {formatNumber(selectedProperty.square_feet)}
+                    </span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>🏠 Property Type</span>
+                    <span className={styles.detailValue}>
+                      {selectedProperty.property_type || "Single Family"}
+                    </span>
+                  </div>
+                  {selectedProperty.lot_size && (
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>🌳 Lot Size</span>
+                      <span className={styles.detailValue}>
+                        {selectedProperty.lot_size} acres
+                      </span>
+                    </div>
+                  )}
+                  {selectedProperty.year_built && (
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>📅 Year Built</span>
+                      <span className={styles.detailValue}>
+                        {selectedProperty.year_built}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {selectedProperty.description && (
+                  <div className={styles.modalDescription}>
+                    <h4>Description</h4>
+                    <p>{selectedProperty.description}</p>
+                  </div>
+                )}
+
+                {selectedProperty.seller_notes && (
+                  <div className={styles.modalDescription}>
+                    <h4>Seller Notes</h4>
+                    <p>{selectedProperty.seller_notes}</p>
+                  </div>
+                )}
+
+                <div className={styles.modalMetrics}>
+                  <h4>Investment Metrics</h4>
+                  <div className={styles.metricRow}>
+                    <span>💰 Purchase Price:</span>
+                    <span className={styles.metricHighlight}>
+                      {formatPrice(selectedProperty.purchase_price)}
+                    </span>
+                  </div>
+                  {selectedProperty.arv && (
+                    <div className={styles.metricRow}>
+                      <span>📊 ARV:</span>
+                      <span>{formatPrice(selectedProperty.arv)}</span>
+                    </div>
+                  )}
+                  {selectedProperty.repair_estimate && (
+                    <div className={styles.metricRow}>
+                      <span>🔨 Repair Estimate:</span>
+                      <span>{formatPrice(selectedProperty.repair_estimate)}</span>
+                    </div>
+                  )}
+                  {selectedProperty.holding_costs && (
+                    <div className={styles.metricRow}>
+                      <span>⏳ Holding Costs:</span>
+                      <span>{formatPrice(selectedProperty.holding_costs)}</span>
+                    </div>
+                  )}
+                  {selectedProperty.assignment_fee && (
+                    <div className={styles.metricRow}>
+                      <span>📋 Assignment Fee:</span>
+                      <span>{formatPrice(selectedProperty.assignment_fee)}</span>
+                    </div>
+                  )}
+                  {selectedProperty.transaction_type && (
+                    <div className={styles.metricRow}>
+                      <span>📝 Transaction Type:</span>
+                      <span>{selectedProperty.transaction_type}</span>
+                    </div>
+                  )}
+                  {selectedProperty.profitPotential && (
+                    <div className={styles.metricRow}>
+                      <span>💎 Profit Potential:</span>
+                      <span className={styles.metricHighlight}>
+                        ${selectedProperty.profitPotential}
+                      </span>
+                    </div>
+                  )}
+                  {selectedProperty.cashFlow && (
+                    <div className={styles.metricRow}>
+                      <span>💵 Cash Flow:</span>
+                      <span className={styles.metricHighlight}>
+                        ${selectedProperty.cashFlow}/mo
+                      </span>
+                    </div>
+                  )}
+                  {selectedProperty.closeTime && (
+                    <div className={styles.metricRow}>
+                      <span>⏱️ Close Time:</span>
+                      <span className={styles.metricHighlight}>
+                        {selectedProperty.closeTime}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.modalTimestamps}>
+                  <div className={styles.timestamp}>
+                    <span>📅 Created:</span>
+                    <span>
+                      {new Date(selectedProperty.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className={styles.timestamp}>
+                    <span>🔄 Updated:</span>
+                    <span>
+                      {new Date(selectedProperty.updated_at).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={styles.modalActions}>
+                  <button className={styles.modalDepositBtn}>
+                    💳 Make Deposit
+                  </button>
+                  <button className={styles.modalContactBtn}>
+                    📞 Contact Agent
+                  </button>
+                  <button className={styles.modalFavoriteBtn}>
+                    ♡ Save Property
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
