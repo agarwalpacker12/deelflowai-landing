@@ -311,7 +311,7 @@ const PropertyList = () => {
 
       {/* Property Grid */}
       <div className={styles.propertyGrid}>
-        {loading ? (
+        {loading || properties.length === 0 ? (
           <div className={styles.loading}>
             <div className={styles.spinner}></div>
             <p>Loading properties...</p>
@@ -320,25 +320,6 @@ const PropertyList = () => {
           <div className={styles.error}>
             <p>❌ {error}</p>
             <button onClick={() => window.location.reload()}>Retry</button>
-          </div>
-        ) : properties.length === 0 ? (
-          <div className={styles.noResults}>
-            <p>No properties found matching your criteria.</p>
-            <button
-              onClick={() => {
-                setFilters({
-                  type: "All Type",
-                  minPrice: "",
-                  maxPrice: "",
-                  beds: "Beds",
-                  baths: "Baths",
-                  location: "All Zone 50+",
-                });
-                setSearchQuery("");
-              }}
-            >
-              Clear Filters
-            </button>
           </div>
         ) : (
           properties.map((property) => {
