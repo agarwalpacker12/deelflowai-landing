@@ -27,10 +27,6 @@ import {
   Lock,
 } from "lucide-react";
 import styles from "./page.module.css";
-import PropertyCard from "./component/PropertyCard";
-import PropertyDetailModal from "./component/PropertyDetailModal";
-import MortgageCalculatorView from "./component/MortgageCalculatorView";
-import LiveActivityFeed from "./component/LiveActivityFeed";
 
 // Consistent number formatting to prevent hydration issues
 const formatNumber = (num) => {
@@ -290,6 +286,11 @@ const RealEstatePlatform = () => {
     },
   ]);
 
+  // Client mounting effect
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
+
   // Live activity feed simulation - fixed for hydration
   useEffect(() => {
     if (!mounted) return;
@@ -321,6 +322,55 @@ const RealEstatePlatform = () => {
 
     return () => clearInterval(interval);
   }, [mounted]);
+
+  // Validate mortgage inputs
+  const validateMortgageInput = (field, value) => {
+    const numValue = parseFloat(value);
+
+    switch (field) {
+      case "homePrice":
+        return numValue >= 0 && numValue <= 100000000
+          ? numValue
+          : mortgageCalculator.homePrice;
+      case "downPayment":
+        const maxDown = mortgageCalculator.homePrice;
+        return numValue >= 0 && numValue <= maxDown
+          ? numValue
+          : mortgageCalculator.downPayment;
+      case "interestRate":
+        return numValue >= 0 && numValue <= 30
+          ? numValue
+          : mortgageCalculator.interestRate;
+      case "loanTerm":
+        return numValue > 0 && numValue <= 50
+          ? numValue
+          : mortgageCalculator.loanTerm;
+      default:
+        return value;
+    }
+  };
+
+  // Live Activity Feed Component
+  const LiveActivityFeed = () => (
+    <div className={styles.liveActivityFeed}>
+      <div className={styles.liveActivityHeader}>
+        <h4 className={styles.liveActivityTitle}>
+          <Activity className={styles.activityIcon} />
+          Live Activity
+        </h4>
+        <span className={styles.liveIndicator}></span>
+      </div>
+      <div className={styles.activityList}>
+        {liveActivity.map((activity, index) => (
+          <div key={index} className={styles.activityItem}>
+            <span className={styles.activityUser}>{activity.user}</span>{" "}
+            {activity.action}{" "}
+            <span className={styles.activityProperty}>{activity.property}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   // Enhanced Search Bar with AI
   const SearchBar = () => (
@@ -476,6 +526,898 @@ const RealEstatePlatform = () => {
     </div>
   );
 
+  // Enhanced Property Card with Wholesale Features
+  const PropertyCard = ({ property }) => {
+    const [saved, setSaved] = useState(false);
+
+    return (
+      <div className={styles.propertyCard}>
+        {/* Hot Deal Badge */}
+        {property.aiScore >= 90 && (
+          <div className={styles.hotDealBadge}>🔥 HOT DEAL</div>
+        )}
+
+        {/* Blockchain Verified Badge */}
+        {property.blockchainVerified && (
+          <div className={styles.verifiedBadge}>
+            <Shield className={styles.shieldIcon} />
+            Verified
+          </div>
+        )}
+
+        <div className={styles.propertyImageContainer}>
+          <div className={styles.propertyImage}>
+            {/* <img
+              src={`https://via.placeholder.com/800x600?text=${encodeURIComponent(
+                property.address
+              )}`}
+              alt={`Property at ${property.address}`}
+              className={styles.propertyImg}
+            /> */}
+          </div>
+
+          {/* Virtual Tour Badge */}
+          {property.virtualTour && (
+            <div className={styles.virtualTourBadge}>
+              <span className={styles.tourBadge}>
+                <Play className={styles.playIcon} />
+                3D Tour
+              </span>
+            </div>
+          )}
+
+          {/* Instant Buy Badge */}
+          {property.instantBuy && (
+            <div className={styles.instantBuyBadge}>
+              <span className={styles.instantBadge}>
+                <Zap className={styles.zapIcon} />
+                Instant Buy
+              </span>
+            </div>
+          )}
+
+          {/* Save Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSaved(!saved);
+              if (!saved) {
+                setUser((prev) => ({ ...prev, points: prev.points + 5 }));
+              }
+            }}
+            className={styles.saveButton}
+          >
+            <Heart
+              className={`${styles.heartIcon} ${
+                saved ? styles.heartSaved : ""
+              }`}
+            />
+          </button>
+        </div>
+
+        <div className={styles.propertyContent}>
+          {/* Price and AI Score */}
+          <div className={styles.priceHeader}>
+            <div className={styles.propertyPrice}>
+              ${formatNumber(property.price)}
+            </div>
+            <div className={styles.aiScoreContainer}>
+              <div
+                className={`${styles.aiScoreBadge} ${
+                  property.aiScore >= 90
+                    ? styles.aiScoreHigh
+                    : property.aiScore >= 80
+                    ? styles.aiScoreMedium
+                    : styles.aiScoreLow
+                }`}
+              >
+                <Brain className={styles.brainIcon} />
+                AI: {property.aiScore}
+              </div>
+            </div>
+          </div>
+
+          {/* Property Details */}
+          <div className={styles.propertyDetails}>
+            <div className={styles.detailItem}>
+              <Bed className={styles.detailIcon} />
+              <span className={styles.detailText}>{property.beds} bd</span>
+            </div>
+            <div className={styles.detailItem}>
+              <Bath className={styles.detailIcon} />
+              <span className={styles.detailText}>{property.baths} ba</span>
+            </div>
+            <div className={styles.detailItem}>
+              <Square className={styles.detailIcon} />
+              <span className={styles.detailText}>
+                {formatNumber(property.sqft)} sqft
+              </span>
+            </div>
+          </div>
+
+          <div className={styles.propertyAddress}>
+            <p className={styles.addressLine1}>{property.address}</p>
+            <p className={styles.addressLine2}>
+              {property.city}, {property.state} {property.zip}
+            </p>
+          </div>
+
+          {/* Wholesale Metrics */}
+          <div className={styles.wholesaleMetrics}>
+            <div className={styles.metricRow}>
+              <span className={styles.metricLabel}>ARV:</span>
+              <span className={styles.metricValueGreen}>
+                ${formatNumber(property.arv)}
+              </span>
+            </div>
+            <div className={styles.metricRow}>
+              <span className={styles.metricLabel}>Profit Potential:</span>
+              <span className={styles.metricValueBlue}>
+                ${formatNumber(property.profitPotential)}
+              </span>
+            </div>
+            <div className={styles.metricRow}>
+              <span className={styles.metricLabelWithIcon}>
+                <Clock className={styles.clockIcon} />
+                Close Time:
+              </span>
+              <span className={styles.metricValuePurple}>
+                {property.wholesaleMetrics.estimatedCloseTime}
+              </span>
+            </div>
+          </div>
+
+          {/* View Stats */}
+          <div className={styles.viewStats}>
+            <span className={styles.viewStatItem}>
+              <Eye className={styles.viewStatIcon} />
+              {property.viewCount} views
+            </span>
+            <span className={styles.viewStatItem}>
+              <Heart className={styles.viewStatIcon} />
+              {property.savedCount} saved
+            </span>
+            <span className={styles.viewStatItem}>
+              <Users className={styles.viewStatIcon} />
+              {property.wholesaleMetrics.fundersAvailable} funders
+            </span>
+          </div>
+
+          {/* Action Buttons */}
+          <div className={styles.actionButtons}>
+            <button
+              onClick={() => setSelectedProperty(property)}
+              className={styles.viewDetailsButton}
+            >
+              View Details
+            </button>
+            {property.instantBuy && (
+              <button className={styles.depositButton}>
+                <Lock className={styles.lockIcon} />
+                Deposit
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Enhanced Property Detail Modal with Wholesale Features
+  const PropertyDetailModal = ({ property, onClose }) => {
+    const [activeTab, setActiveTab] = useState("overview");
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [showAIChat, setShowAIChat] = useState(false);
+
+    useEffect(() => {
+      const handleEscape = (e) => {
+        if (e.key === "Escape") {
+          onClose();
+        }
+      };
+
+      if (property) {
+        document.addEventListener("keydown", handleEscape);
+        return () => document.removeEventListener("keydown", handleEscape);
+      }
+    }, [property, onClose]);
+
+    if (!property) return null;
+
+    return (
+      <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+        <div className={styles.modalContainer}>
+          <div className={styles.modalBackdrop} onClick={onClose}></div>
+
+          <div className={styles.modalContent}>
+            {/* Header */}
+            <div className={styles.modalHeader}>
+              <div>
+                <h2 className={styles.modalTitle}>{property.address}</h2>
+                <div className={styles.modalSubtitle}>
+                  {property.blockchainVerified && (
+                    <span className={styles.modalBadgeGreen}>
+                      <Shield className={styles.shieldIcon} />
+                      Blockchain Verified
+                    </span>
+                  )}
+                  <span className={styles.modalBadgePurple}>
+                    <Brain className={styles.brainIcon} />
+                    AI Score: {property.aiScore}/100
+                  </span>
+                </div>
+              </div>
+              <button onClick={onClose} className={styles.modalCloseButton}>
+                <X className={styles.closeIcon} />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              {/* Image Gallery */}
+              <div className={styles.imageGallery}>
+                <div className={styles.galleryContainer}>
+                  {/* <img
+                    src={`https://via.placeholder.com/1200x800?text=Property+Image+${
+                      currentImageIndex + 1
+                    }`}
+                    alt={`Property view ${currentImageIndex + 1}`}
+                    className={styles.galleryImage}
+                  /> */}
+                  <button
+                    onClick={() =>
+                      setCurrentImageIndex(Math.max(0, currentImageIndex - 1))
+                    }
+                    className={`${styles.galleryButton} ${styles.galleryButtonLeft}`}
+                  >
+                    <ChevronLeft className={styles.chevronIcon} />
+                  </button>
+                  <button
+                    onClick={() =>
+                      setCurrentImageIndex(Math.min(2, currentImageIndex + 1))
+                    }
+                    className={`${styles.galleryButton} ${styles.galleryButtonRight}`}
+                  >
+                    <ChevronRight className={styles.chevronIcon} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Content Grid */}
+              <div className={styles.modalContentGrid}>
+                <div className={styles.modalMainContent}>
+                  {/* Tabs */}
+                  <div className={styles.tabsContainer} role="tablist">
+                    {[
+                      "overview",
+                      "wholesale",
+                      "features",
+                      "neighborhood",
+                      "history",
+                    ].map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`${styles.tabButton} ${
+                          activeTab === tab ? styles.tabButtonActive : ""
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Tab Content */}
+                  {activeTab === "overview" && (
+                    <div className={styles.tabContent}>
+                      <div className={styles.descriptionSection}>
+                        <h3 className={styles.sectionTitle}>Description</h3>
+                        <p className={styles.descriptionText}>
+                          {property.description}
+                        </p>
+                      </div>
+
+                      <div className={styles.overviewGrid}>
+                        <div className={styles.overviewCard}>
+                          <div className={styles.overviewLabel}>
+                            Property Type
+                          </div>
+                          <div className={styles.overviewValue}>
+                            {property.type}
+                          </div>
+                        </div>
+                        <div className={styles.overviewCard}>
+                          <div className={styles.overviewLabel}>Year Built</div>
+                          <div className={styles.overviewValue}>
+                            {property.yearBuilt}
+                          </div>
+                        </div>
+                        <div className={styles.overviewCard}>
+                          <div className={styles.overviewLabel}>
+                            Days on Market
+                          </div>
+                          <div className={styles.overviewValue}>
+                            {property.daysOnMarket}
+                          </div>
+                        </div>
+                        <div className={styles.aiScoreCard}>
+                          <div className={styles.overviewLabel}>
+                            AI Investment Score
+                          </div>
+                          <div className={styles.aiScoreValue}>
+                            {property.aiScore}/100
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "wholesale" && (
+                    <div className={styles.tabContent}>
+                      <h3 className={styles.sectionTitle}>
+                        Wholesale Analysis
+                      </h3>
+
+                      <div className={styles.dealMetricsCard}>
+                        <h4 className={styles.cardTitle}>Deal Metrics</h4>
+                        <div className={styles.metricsGrid}>
+                          <div>
+                            <div className={styles.metricLabel}>
+                              Purchase Price
+                            </div>
+                            <div className={styles.metricPriceValue}>
+                              ${formatNumber(property.price)}
+                            </div>
+                          </div>
+                          <div>
+                            <div className={styles.metricLabel}>
+                              After Repair Value
+                            </div>
+                            <div className={styles.metricGreenValue}>
+                              ${formatNumber(property.arv)}
+                            </div>
+                          </div>
+                          <div>
+                            <div className={styles.metricLabel}>
+                              Repair Estimate
+                            </div>
+                            <div className={styles.metricOrangeValue}>
+                              ${formatNumber(property.repairEstimate)}
+                            </div>
+                          </div>
+                          <div>
+                            <div className={styles.metricLabel}>
+                              Profit Potential
+                            </div>
+                            <div className={styles.metricBlueValue}>
+                              ${formatNumber(property.profitPotential)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className={styles.transactionCard}>
+                        <h4 className={styles.cardTitle}>
+                          Transaction Details
+                        </h4>
+                        <div className={styles.transactionDetails}>
+                          <div className={styles.transactionRow}>
+                            <span className={styles.transactionLabel}>
+                              Assignment Fee
+                            </span>
+                            <span className={styles.transactionValue}>
+                              $
+                              {formatNumber(
+                                property.wholesaleMetrics.assignmentFee
+                              )}
+                            </span>
+                          </div>
+                          <div className={styles.transactionRow}>
+                            <span className={styles.transactionLabel}>
+                              Escrow Required
+                            </span>
+                            <span className={styles.transactionValue}>
+                              $
+                              {formatNumber(
+                                property.wholesaleMetrics.escrowRequired
+                              )}
+                            </span>
+                          </div>
+                          <div className={styles.transactionRow}>
+                            <span className={styles.transactionLabel}>
+                              Funders Available
+                            </span>
+                            <span className={styles.transactionValueGreen}>
+                              {property.wholesaleMetrics.fundersAvailable}
+                            </span>
+                          </div>
+                          <div className={styles.transactionRow}>
+                            <span className={styles.transactionLabel}>
+                              Est. Close Time
+                            </span>
+                            <span className={styles.transactionValueBlue}>
+                              {property.wholesaleMetrics.estimatedCloseTime}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "features" && (
+                    <div className={styles.tabContent}>
+                      <h3 className={styles.sectionTitle}>Property Features</h3>
+                      <div className={styles.featuresGrid}>
+                        {property.features.map((feature) => (
+                          <div key={feature} className={styles.featureItem}>
+                            <Check className={styles.checkIcon} />
+                            <span className={styles.featureText}>
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "neighborhood" && (
+                    <div className={styles.tabContent}>
+                      <h3 className={styles.sectionTitle}>
+                        Neighborhood Stats
+                      </h3>
+                      <div className={styles.neighborhoodGrid}>
+                        <div className={styles.neighborhoodCardBlue}>
+                          <div className={styles.neighborhoodLabel}>
+                            Walk Score
+                          </div>
+                          <div className={styles.neighborhoodValueBlue}>
+                            {property.neighborhood?.walkScore || "N/A"}
+                          </div>
+                        </div>
+                        <div className={styles.neighborhoodCardGreen}>
+                          <div className={styles.neighborhoodLabel}>
+                            Transit Score
+                          </div>
+                          <div className={styles.neighborhoodValueGreen}>
+                            {property.neighborhood?.transitScore || "N/A"}
+                          </div>
+                        </div>
+                        <div className={styles.neighborhoodCardPurple}>
+                          <div className={styles.neighborhoodLabel}>
+                            School Rating
+                          </div>
+                          <div className={styles.neighborhoodValuePurple}>
+                            {property.neighborhood?.schools || "N/A"}
+                          </div>
+                        </div>
+                        <div className={styles.neighborhoodCardOrange}>
+                          <div className={styles.neighborhoodLabel}>
+                            Appreciation Rate
+                          </div>
+                          <div className={styles.neighborhoodValueOrange}>
+                            {property.neighborhood?.appreciationRate || 0}%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "history" && (
+                    <div className={styles.tabContent}>
+                      <h3 className={styles.sectionTitle}>Price History</h3>
+                      <div className={styles.historyList}>
+                        {property.priceHistory?.map((record) => (
+                          <div key={record.id} className={styles.historyItem}>
+                            <span className={styles.historyDate}>
+                              {record.date}
+                            </span>
+                            <span className={styles.historyPrice}>
+                              ${formatNumber(record.price)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Sidebar */}
+                <div className={styles.modalSidebar}>
+                  {/* Price Card */}
+                  <div className={styles.priceCard}>
+                    <div className={styles.priceCardPrice}>
+                      ${formatNumber(property.price)}
+                    </div>
+                    <div className={styles.priceCardDetails}>
+                      <div className={styles.priceDetailItem}>
+                        <Bed className={styles.priceDetailIcon} />
+                        <span>{property.beds} beds</span>
+                      </div>
+                      <div className={styles.priceDetailItem}>
+                        <Bath className={styles.priceDetailIcon} />
+                        <span>{property.baths} baths</span>
+                      </div>
+                      <div className={styles.priceDetailItem}>
+                        <Square className={styles.priceDetailIcon} />
+                        <span>{property.sqft} sqft</span>
+                      </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className={styles.quickActions}>
+                      <button className={styles.depositEscrowButton}>
+                        <Lock className={styles.lockIcon} />
+                        Deposit Escrow
+                      </button>
+                      <button className={styles.makeOfferButton}>
+                        Make Offer
+                      </button>
+                      <button
+                        onClick={() => setShowAIChat(true)}
+                        className={styles.aiAssistantButton}
+                      >
+                        <Brain className={styles.brainIcon} />
+                        AI Assistant
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Agent Card with AI */}
+                  <div className={styles.agentCard}>
+                    <h4 className={styles.agentCardTitle}>AI-Powered Agent</h4>
+                    <div className={styles.agentInfo}>
+                      <div className={styles.agentAvatar}>
+                        {property.agent?.name?.charAt(0) || "A"}
+                      </div>
+                      <div>
+                        <div className={styles.agentName}>
+                          {property.agent?.name || "AI Agent"}
+                        </div>
+                        <div className={styles.agentRating}>
+                          <div className={styles.ratingDisplay}>
+                            <Star className={styles.starIcon} />
+                            <span className={styles.ratingValue}>
+                              {property.agent?.rating || "N/A"}
+                            </span>
+                          </div>
+                          <span className={styles.responseTime}>
+                            {property.agent?.aiResponseTime}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.agentActions}>
+                      <button className={styles.contactAgentButton}>
+                        Contact Agent
+                      </button>
+                      <button className={styles.scheduleTourButton}>
+                        Schedule Tour
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Virtual Tour */}
+                  {property.virtualTour && (
+                    <button className={styles.virtualTourButton}>
+                      <Play className={styles.playIcon} />
+                      Start 3D Virtual Tour
+                    </button>
+                  )}
+
+                  {/* Funding Options */}
+                  <div className={styles.fundingCard}>
+                    <h4 className={styles.fundingTitle}>Instant Funding</h4>
+                    <div className={styles.fundingDetails}>
+                      <div className={styles.fundingRow}>
+                        <span className={styles.fundingLabel}>
+                          Funders Available
+                        </span>
+                        <span className={styles.fundingValueGreen}>
+                          {property.wholesaleMetrics.fundersAvailable}
+                        </span>
+                      </div>
+                      <div className={styles.fundingRow}>
+                        <span className={styles.fundingLabel}>Best Rate</span>
+                        <span className={styles.fundingValue}>
+                          8.5% + 2 pts
+                        </span>
+                      </div>
+                      <button className={styles.getFundingButton}>
+                        Get Funding Quotes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* AI Chat Assistant */}
+        {showAIChat && (
+          <div className={styles.aiChatContainer}>
+            <div className={styles.aiChatHeader}>
+              <div className={styles.aiChatTitle}>
+                <Brain className={styles.brainIcon} />
+                <span>AI Property Assistant</span>
+              </div>
+              <button onClick={() => setShowAIChat(false)}>
+                <X className={styles.closeIcon} />
+              </button>
+            </div>
+            <div className={styles.aiChatBody}>
+              <div className={styles.aiChatMessages}>
+                <div className={styles.aiMessage}>
+                  <p className={styles.aiMessageText}>
+                    Hi! I've analyzed this property. With an AI score of{" "}
+                    {property.aiScore}, this property shows excellent investment
+                    potential. The estimated profit of $
+                    {formatNumber(property.profitPotential)} makes it a strong
+                    wholesale opportunity.
+                  </p>
+                </div>
+                <div className={styles.aiMessage}>
+                  <p className={styles.aiMessageText}>
+                    Based on market data, I recommend moving quickly. Properties
+                    with similar metrics typically close within{" "}
+                    {property.wholesaleMetrics.estimatedCloseTime}. Would you
+                    like to deposit escrow now?
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className={styles.aiChatFooter}>
+              <div className={styles.aiChatInputContainer}>
+                <input
+                  type="text"
+                  placeholder="Ask about this property..."
+                  className={styles.aiChatInput}
+                />
+                <button className={styles.aiChatSendButton}>Send</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Enhanced Mortgage Calculator
+  const MortgageCalculatorView = () => {
+    const calculateMonthlyPayment = () => {
+      const principal =
+        mortgageCalculator.homePrice - mortgageCalculator.downPayment;
+
+      if (principal <= 0) return 0;
+      if (mortgageCalculator.interestRate === 0) {
+        return principal / (mortgageCalculator.loanTerm * 12);
+      }
+
+      const monthlyRate = mortgageCalculator.interestRate / 100 / 12;
+      const numPayments = mortgageCalculator.loanTerm * 12;
+
+      const monthlyPayment =
+        (principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1);
+
+      return isNaN(monthlyPayment) ? 0 : monthlyPayment;
+    };
+
+    const monthlyPayment = calculateMonthlyPayment();
+    const totalInterest =
+      monthlyPayment * mortgageCalculator.loanTerm * 12 -
+      (mortgageCalculator.homePrice - mortgageCalculator.downPayment);
+
+    return (
+      <div className={styles.mortgageCalculatorView}>
+        <div className={styles.calculatorContainer}>
+          <div className={styles.calculatorHeader}>
+            <h2 className={styles.calculatorTitle}>
+              AI-Powered Mortgage Calculator
+            </h2>
+            <p className={styles.calculatorSubtitle}>
+              Get instant approval with blockchain verification
+            </p>
+          </div>
+
+          <div className={styles.calculatorGrid}>
+            <div className={styles.calculatorForm}>
+              <h3 className={styles.formTitle}>Loan Details</h3>
+
+              <div className={styles.formFields}>
+                <div className={styles.formField}>
+                  <label className={styles.fieldLabel}>Home Price</label>
+                  <div className={styles.currencyInput}>
+                    <span className={styles.currencySymbol}>$</span>
+                    <input
+                      type="number"
+                      value={mortgageCalculator.homePrice}
+                      onChange={(e) => {
+                        const validated = validateMortgageInput(
+                          "homePrice",
+                          e.target.value
+                        );
+                        setMortgageCalculator({
+                          ...mortgageCalculator,
+                          homePrice: validated,
+                        });
+                      }}
+                      className={styles.currencyField}
+                      min="0"
+                      max="100000000"
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.formField}>
+                  <label className={styles.fieldLabel}>Down Payment</label>
+                  <div className={styles.currencyInput}>
+                    <span className={styles.currencySymbol}>$</span>
+                    <input
+                      type="number"
+                      value={mortgageCalculator.downPayment}
+                      onChange={(e) => {
+                        const validated = validateMortgageInput(
+                          "downPayment",
+                          e.target.value
+                        );
+                        setMortgageCalculator({
+                          ...mortgageCalculator,
+                          downPayment: validated,
+                        });
+                      }}
+                      className={styles.currencyField}
+                      min="0"
+                      max={mortgageCalculator.homePrice}
+                    />
+                  </div>
+                  <div className={styles.fieldHelper}>
+                    {mortgageCalculator.homePrice > 0
+                      ? `${(
+                          (mortgageCalculator.downPayment /
+                            mortgageCalculator.homePrice) *
+                          100
+                        ).toFixed(1)}% down`
+                      : "0% down"}
+                  </div>
+                </div>
+
+                <div className={styles.formField}>
+                  <label className={styles.fieldLabel}>Interest Rate</label>
+                  <div className={styles.percentageInput}>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={mortgageCalculator.interestRate}
+                      onChange={(e) => {
+                        const validated = validateMortgageInput(
+                          "interestRate",
+                          e.target.value
+                        );
+                        setMortgageCalculator({
+                          ...mortgageCalculator,
+                          interestRate: validated,
+                        });
+                      }}
+                      className={styles.percentageField}
+                      min="0"
+                      max="30"
+                    />
+                    <span className={styles.percentageSymbol}>%</span>
+                  </div>
+                </div>
+
+                <div className={styles.formField}>
+                  <label className={styles.fieldLabel}>Loan Term</label>
+                  <select
+                    value={mortgageCalculator.loanTerm}
+                    onChange={(e) =>
+                      setMortgageCalculator({
+                        ...mortgageCalculator,
+                        loanTerm: parseInt(e.target.value),
+                      })
+                    }
+                    className={styles.selectField}
+                  >
+                    <option value="15">15 years</option>
+                    <option value="30">30 years</option>
+                  </select>
+                </div>
+
+                {/* AI Recommendation */}
+                <div className={styles.aiRecommendationCard}>
+                  <div className={styles.aiRecommendationHeader}>
+                    <Brain className={styles.brainIcon} />
+                    <span className={styles.aiRecommendationTitle}>
+                      AI Recommendation
+                    </span>
+                  </div>
+                  <p className={styles.aiRecommendationText}>
+                    Based on your profile, you qualify for our premium rate of
+                    5.9%. This could save you $
+                    {formatNumber(Math.round(monthlyPayment * 0.1))}/month!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.calculatorResults}>
+              <h3 className={styles.resultsTitle}>Monthly Payment Breakdown</h3>
+
+              <div className={styles.monthlyPaymentDisplay}>
+                <div className={styles.paymentAmount}>
+                  ${formatNumber(Math.round(monthlyPayment))}
+                </div>
+                <div className={styles.paymentPeriod}>per month</div>
+              </div>
+
+              <div className={styles.paymentBreakdown}>
+                <div className={styles.breakdownRow}>
+                  <span className={styles.breakdownLabel}>
+                    Principal & Interest
+                  </span>
+                  <span className={styles.breakdownValue}>
+                    ${monthlyPayment.toFixed(0)}
+                  </span>
+                </div>
+                <div className={styles.breakdownRow}>
+                  <span className={styles.breakdownLabel}>
+                    Property Tax (est.)
+                  </span>
+                  <span className={styles.breakdownValue}>
+                    ${Math.round((mortgageCalculator.homePrice * 0.01) / 12)}
+                  </span>
+                </div>
+                <div className={styles.breakdownRow}>
+                  <span className={styles.breakdownLabel}>
+                    Homeowners Insurance
+                  </span>
+                  <span className={styles.breakdownValue}>$150</span>
+                </div>
+                <div className={styles.breakdownRow}>
+                  <span className={styles.breakdownLabel}>HOA Fees</span>
+                  <span className={styles.breakdownValue}>$100</span>
+                </div>
+                <div className={styles.totalRow}>
+                  <div className={styles.totalBreakdownRow}>
+                    <span className={styles.totalLabel}>Total Monthly</span>
+                    <span className={styles.totalValue}>
+                      $
+                      {formatNumber(
+                        Math.round(
+                          monthlyPayment +
+                            (mortgageCalculator.homePrice * 0.01) / 12 +
+                            150 +
+                            100
+                        )
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.interestCard}>
+                <div className={styles.interestLabel}>Total Interest Paid</div>
+                <div className={styles.interestValue}>
+                  $
+                  {formatNumber(
+                    Math.round(totalInterest > 0 ? totalInterest : 0)
+                  )}
+                </div>
+              </div>
+
+              {/* Get Instant Approval Button */}
+              <button className={styles.instantApprovalButton}>
+                <Zap className={styles.zapIcon} />
+                Get Instant Approval
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Main Dashboard View
   const DashboardView = () => (
     <div>
       <SearchBar />
@@ -515,12 +1457,7 @@ const RealEstatePlatform = () => {
         <div className={styles.propertiesGrid}>
           <div className={styles.propertiesContainer}>
             {properties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                setSelectedProperty={setSelectedProperty}
-                setUser={setUser}
-              />
+              <PropertyCard key={property.id} property={property} />
             ))}
           </div>
         </div>
@@ -546,12 +1483,7 @@ const RealEstatePlatform = () => {
       {activeView === "dashboard" || activeView === "buy" ? (
         <DashboardView />
       ) : null}
-      {activeView === "mortgage" && (
-        <MortgageCalculatorView
-          mortgageCalculator={mortgageCalculator}
-          setMortgageCalculator={setMortgageCalculator}
-        />
-      )}
+      {activeView === "mortgage" && <MortgageCalculatorView />}
 
       {selectedProperty && (
         <PropertyDetailModal
@@ -561,9 +1493,7 @@ const RealEstatePlatform = () => {
       )}
 
       {/* Live Activity Feed */}
-      {mounted && liveActivity.length > 0 && (
-        <LiveActivityFeed liveActivity={liveActivity} />
-      )}
+      {mounted && liveActivity.length > 0 && <LiveActivityFeed />}
     </div>
   );
 };
