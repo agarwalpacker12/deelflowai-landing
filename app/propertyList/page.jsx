@@ -5,6 +5,19 @@ import styles from "./page.module.css";
 import { propertiesAPI } from "../services/api"; // Add your API import here
 
 const PropertyList = () => {
+  const staticImages = [
+    "house1.jpg",
+    "house2.jpg",
+    "house3.jpg",
+    "house4.jpg",
+    "house5.jpg",
+    "house6.jpg",
+    "house7.jpg",
+    "house8.jpg",
+    "house9.jpg",
+    "house10.jpg",
+  ];
+
   const [filters, setFilters] = useState({
     type: "All Type",
     minPrice: "",
@@ -111,6 +124,7 @@ const PropertyList = () => {
   };
 
   const handleViewDetails = (property) => {
+    debugger;
     setSelectedProperty(getPropertyDisplayData(property));
     setShowModal(true);
   };
@@ -329,11 +343,13 @@ const PropertyList = () => {
         ) : (
           properties.map((property) => {
             const displayProperty = getPropertyDisplayData(property);
+            const randomStaticImage =
+              staticImages[Math.floor(Math.random() * staticImages.length)];
             return (
               <div key={property.id} className={styles.propertyCard}>
                 <div className={styles.imageContainer}>
                   <img
-                    src="/api/placeholder/300/200"
+                    src={`/assets/${randomStaticImage}`}
                     alt={property.street_address}
                     className={styles.propertyImage}
                   />
@@ -509,7 +525,7 @@ const PropertyList = () => {
                       <div className={styles.imageGallery}>
                         <div className={styles.mainImage}>
                           <img
-                            src="/api/placeholder/600/400"
+                            src={`/assets/${staticImages[9]}`}
                             alt={selectedProperty.street_address}
                             className={styles.galleryMainImage}
                           />
@@ -539,13 +555,13 @@ const PropertyList = () => {
                           </div>
                         </div>
                         <div className={styles.thumbnailRow}>
-                          {[1, 2, 3, 4].map((thumb, index) => (
+                          {staticImages.map((thumb, index) => (
                             <div key={index} className={styles.thumbnail}>
                               <img
-                                src={`/api/placeholder/120/80`}
+                                src={`/assets/${thumb}`}
                                 alt={`View ${thumb}`}
                               />
-                              {index === 3 && (
+                              {index === 9 && (
                                 <div className={styles.morePhotos}>+8</div>
                               )}
                             </div>
