@@ -65,7 +65,7 @@ const LoginPage = () => {
 
       if (login.fulfilled.match(resultAction)) {
         setOrgLoading(true);
-        router.push("/profile");
+        router.push("http://localhost:5173/app/profile");
       }
     } catch (error) {
       console.error("Login failed:", error);

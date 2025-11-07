@@ -444,7 +444,9 @@ const RegisterPage = () => {
                       className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={loading}
                     >
-                      {loading ? "Creating Account..." : "Create Account"}
+                      <span className="text-white">
+                        {loading ? "Creating Account..." : "Create Account"}
+                      </span>
                     </button>
 
                     {/* Terms */}

@@ -1,17 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const isHomePage = pathname === "/";
   const [activeUsers, setActiveUsers] = useState(3847);
   const [dailyDeals, setDailyDeals] = useState(127);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -37,6 +39,16 @@ function Navbar() {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
   };
 
   // Navigation links for home page (anchor links)
@@ -135,45 +147,123 @@ function Navbar() {
           </nav>
 
           {/* Desktop CTA */}
-          {/* <div
-            className="flex items-center desktop-cta"
-            style={{ gap: "1rem" }}
-          >
-            <a
-              href="https://apps.deelflowai.com/register"
-              className="gradient-button"
-              style={{
-                color: "#6b7280",
-                fontWeight: 500,
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                textDecoration: "none",
-                padding: "0.5rem 1rem",
-                borderRadius: "0.375rem",
-                transition: "all 0.3s ease",
-              }}
-            >
-              Sign up
-            </a>
-            <a
-              href="https://apps.deelflowai.com/login"
-              className="gradient-button"
-              style={{
-                color: "white",
-                padding: "0.5rem 1.5rem",
-                borderRadius: "9999px",
-                fontWeight: 600,
-                border: "none",
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-            >
-              Sign in
-            </a>
-          </div> */}
 
           {isLoggedIn ? (
+            <div style={{ position: "relative" }}>
+              <button
+                onClick={handleSignOut}
+                className="gradient-button"
+                style={{
+                  color: "white",
+                  padding: "0.5rem 1.5rem",
+                  borderRadius: "9999px",
+                  fontWeight: 600,
+                  border: "none",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+                // onMouseEnter={(e) => {
+                //   e.target.style.background = "#f9fafb";
+                // }}
+                // onMouseLeave={(e) => {
+                //   e.target.style.background = "white";
+                // }}
+              >
+                Sign out
+              </button>
+              {/* <button
+                onClick={toggleDropdown}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "0.5rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ color: "#6b7280" }}
+                >
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </button>
+
+              {isDropdownOpen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: "100%",
+                    marginTop: "0.5rem",
+                    background: "white",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "0.5rem",
+                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                    minWidth: "150px",
+                    zIndex: 50,
+                  }}
+                >
+                  <Link
+                    href="/profile"
+                    style={{
+                      display: "block",
+                      padding: "0.75rem 1rem",
+                      color: "#374151",
+                      textDecoration: "none",
+                      fontSize: "0.875rem",
+                      fontWeight: 500,
+                      borderBottom: "1px solid #e5e7eb",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = "#f9fafb";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = "white";
+                    }}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      padding: "0.75rem 1rem",
+                      color: "#374151",
+                      textDecoration: "none",
+                      fontSize: "0.875rem",
+                      fontWeight: 500,
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = "#f9fafb";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = "white";
+                    }}
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )} */}
+            </div>
+          ) : (
+            // <Link href={"/login"}>
             <button
               className="gradient-button"
               style={{
@@ -185,31 +275,11 @@ function Navbar() {
                 cursor: "pointer",
                 textDecoration: "none",
               }}
-              onClick={() => {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                window.location.reload();
-              }}
+              onClick={() => router.push("http://localhost:5173/login")}
             >
-              Sign out
+              Sign in
             </button>
-          ) : (
-            <Link href={"/login"}>
-              <button
-                className="gradient-button"
-                style={{
-                  color: "white",
-                  padding: "0.5rem 1.5rem",
-                  borderRadius: "9999px",
-                  fontWeight: 600,
-                  border: "none",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                }}
-              >
-                Sign in
-              </button>
-            </Link>
+            // </Link>
           )}
 
           {/* Mobile Header Right (Buttons + Menu) */}
@@ -228,9 +298,21 @@ function Navbar() {
                   Sign out
                 </button>
               ) : (
-                <Link href="/login" className="mobile-btn-signin">
+                <button
+                  className="gradient-button"
+                  style={{
+                    color: "white",
+                    padding: "0.5rem 1.5rem",
+                    borderRadius: "9999px",
+                    fontWeight: 600,
+                    border: "none",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                  }}
+                  onClick={() => router.push("http://localhost:5173/login")}
+                >
                   Sign in
-                </Link>
+                </button>
               )}
             </div>
 
@@ -312,24 +394,21 @@ function Navbar() {
                   Sign out
                 </button>
               ) : (
-                <Link
-                  href="/login"
+                <button
                   className="gradient-button"
                   style={{
                     color: "white",
-                    padding: "0.75rem 1.5rem",
+                    padding: "0.5rem 1.5rem",
                     borderRadius: "9999px",
                     fontWeight: 600,
                     border: "none",
                     cursor: "pointer",
                     textDecoration: "none",
-                    textAlign: "center",
-                    display: "block",
-                    flex: 1,
                   }}
+                  onClick={() => router.push("http://localhost:5173/login")}
                 >
                   Sign in
-                </Link>
+                </button>
               )}
             </div>
 
