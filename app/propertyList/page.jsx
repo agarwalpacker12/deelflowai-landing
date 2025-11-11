@@ -18,6 +18,37 @@ const PropertyList = () => {
     "house10.jpg",
   ];
 
+  // Deterministic function to get the same image for the same property ID
+  // This ensures the same property shows the same image in both dashboard and landing page
+  const getPropertyImage = (propertyId) => {
+    if (!propertyId) {
+      return staticImages[0]; // Default to first image if no ID
+    }
+    
+    // Convert property ID to a number (handle string IDs like "src:internal:26")
+    let idNum = 0;
+    if (typeof propertyId === 'string') {
+      // Extract numeric part from IDs like "src:internal:26" or "src:attom:12345678"
+      const match = propertyId.match(/\d+/);
+      if (match) {
+        idNum = parseInt(match[0], 10);
+      } else {
+        // If no number found, hash the string
+        for (let i = 0; i < propertyId.length; i++) {
+          idNum = ((idNum << 5) - idNum) + propertyId.charCodeAt(i);
+          idNum = idNum & idNum; // Convert to 32-bit integer
+        }
+        idNum = Math.abs(idNum);
+      }
+    } else {
+      idNum = parseInt(propertyId, 10) || 0;
+    }
+    
+    // Use modulo to consistently map to an image index
+    const imageIndex = idNum % staticImages.length;
+    return staticImages[imageIndex];
+  };
+
   const [filters, setFilters] = useState({
     type: "All Type",
     minPrice: "",
@@ -343,15 +374,28 @@ const PropertyList = () => {
         ) : (
           properties.map((property) => {
             const displayProperty = getPropertyDisplayData(property);
-            const randomStaticImage =
-              staticImages[Math.floor(Math.random() * staticImages.length)];
+            // Use API images if available, otherwise use deterministic static image based on property ID
+            const propertyImage = (property.images && property.images.length > 0 && property.images[0])
+              ? property.images[0]  // Use first image from API
+              : `/assets/${getPropertyImage(property.id)}`;  // Fallback to deterministic static image
+            
             return (
               <div key={property.id} className={styles.propertyCard}>
                 <div className={styles.imageContainer}>
                   <img
-                    src={`/assets/${randomStaticImage}`}
-                    alt={property.street_address}
+                    src={typeof propertyImage === 'string' && propertyImage.startsWith('http')
+                      ? propertyImage  // Full URL from API
+                      : propertyImage.startsWith('/')
+                        ? propertyImage  // Already has /assets/ prefix
+                        : `/assets/${propertyImage}`  // Add /assets/ prefix
+                    }
+                    alt={property.street_address || property.address || "Property"}
                     className={styles.propertyImage}
+                    onError={(e) => {
+                      // Fallback to deterministic static image if API image fails
+                      const fallbackImage = getPropertyImage(property.id);
+                      e.target.src = `/assets/${fallbackImage}`;
+                    }}
                   />
                   <div className={styles.badges}>
                     {displayProperty.tags.map((tag, index) => (
@@ -525,9 +569,18 @@ const PropertyList = () => {
                       <div className={styles.imageGallery}>
                         <div className={styles.mainImage}>
                           <img
-                            src={`/assets/${staticImages[9]}`}
-                            alt={selectedProperty.street_address}
+                            src={
+                              selectedProperty.images && selectedProperty.images.length > 0 && selectedProperty.images[0]
+                                ? selectedProperty.images[0]  // Use first image from API
+                                : `/assets/${getPropertyImage(selectedProperty.id)}`  // Fallback to deterministic static image
+                            }
+                            alt={selectedProperty.street_address || selectedProperty.address || "Property"}
                             className={styles.galleryMainImage}
+                            onError={(e) => {
+                              // Fallback to deterministic static image if API image fails
+                              const fallbackImage = getPropertyImage(selectedProperty.id);
+                              e.target.src = `/assets/${fallbackImage}`;
+                            }}
                           />
                           <div className={styles.imageOverlay}>
                             <div className={styles.imageBadges}>
@@ -555,17 +608,27 @@ const PropertyList = () => {
                           </div>
                         </div>
                         <div className={styles.thumbnailRow}>
-                          {staticImages.map((thumb, index) => (
-                            <div key={index} className={styles.thumbnail}>
-                              <img
-                                src={`/assets/${thumb}`}
-                                alt={`View ${thumb}`}
-                              />
-                              {index === 9 && (
-                                <div className={styles.morePhotos}>+8</div>
-                              )}
-                            </div>
-                          ))}
+                          {staticImages.map((thumb, index) => {
+                            // Use the property's assigned image as the first thumbnail
+                            const thumbnailImage = index === 0 
+                              ? getPropertyImage(selectedProperty.id)
+                              : thumb;
+                            return (
+                              <div key={index} className={styles.thumbnail}>
+                                <img
+                                  src={`/assets/${thumbnailImage}`}
+                                  alt={`View ${index + 1}`}
+                                  onError={(e) => {
+                                    // Fallback to first image if thumbnail fails to load
+                                    e.target.src = `/assets/${staticImages[0]}`;
+                                  }}
+                                />
+                                {index === 9 && (
+                                  <div className={styles.morePhotos}>+8</div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     ) : (
